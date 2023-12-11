@@ -9,3 +9,4 @@ redirect_from:
 ---
 
 I am a doctoral researcher at the [JFK Institute's Sociology Department]([https://github.com/academicpages/academicpages.github.io](https://www.jfki.fu-berlin.de/en/faculty/sociology/index.html)) 
+---

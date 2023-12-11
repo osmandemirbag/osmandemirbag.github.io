@@ -8,5 +8,5 @@ redirect_from:
   - /about.html
 ---
 
-I am a doctoral researcher at the [JFK Institute, Sociology Department](https://www.jfki.fu-berlin.de/en/faculty/sociology/index.html) at FU Berlin. 
+I am a doctoral researcher in Sociology at the [JFK Institute](https://www.jfki.fu-berlin.de/en/faculty/sociology/index.html) at FU Berlin. 
 ---

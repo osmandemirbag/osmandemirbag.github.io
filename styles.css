@@ -1,0 +1,87 @@
+/* Basic modern, clean aesthetic; dark-mode aware */
+:root {
+  --bg: #0b0c0f;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --card: #111317;
+  --accent: #4f46e5;
+  --accent-2: #06b6d4;
+  --border: #20242b;
+}
+
+:root.light {
+  --bg: #ffffff;
+  --text: #0b0c0f;
+  --muted: #475569;
+  --card: #f7f8fa;
+  --accent: #4f46e5;
+  --accent-2: #0ea5e9;
+  --border: #e5e7eb;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--bg);
+  color: var(--text);
+}
+
+.container { width: min(1100px, 92%); margin: 0 auto; }
+.section { padding: 64px 0; }
+
+.site-header { position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(180%) blur(8px); background: color-mix(in srgb, var(--bg), transparent 25%); border-bottom: 1px solid var(--border); }
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+.logo { font-weight: 800; letter-spacing: 1px; padding: 6px 10px; border: 2px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text); }
+
+.btn { display: inline-block; padding: 10px 16px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; text-decoration: none; border: none; cursor: pointer; font-weight: 600; }
+.btn:hover { opacity: .95; transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--card); }
+
+.hero { display: grid; grid-template-columns: 1.2fr .8fr; gap: 32px; padding: 72px 0 40px 0; align-items: center; }
+.hero h1 { font-size: clamp(32px, 5vw, 56px); line-height: 1.1; margin: 0 0 12px; }
+.subtitle { color: var(--muted); max-width: 60ch; }
+.meta { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 6px; color: var(--muted); }
+.meta a { color: var(--text); text-decoration: underline; }
+.cta { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+.hero-media img { width: 220px; height: 220px; border-radius: 20px; object-fit: cover; border: 1px solid var(--border); background: var(--card); }
+
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; }
+.card h3 { margin-top: 0; }
+.tags { display: flex; gap: 8px; flex-wrap: wrap; padding: 0; list-style: none; }
+.tags li { font-size: 12px; padding: 4px 8px; border-radius: 999px; background: rgba(79,70,229,.15); border: 1px solid var(--border); }
+
+.pubs { list-style: none; padding: 0; display: grid; gap: 14px; }
+.pub-title { font-weight: 600; }
+.pub-venue { color: var(--muted); margin-left: 8px; }
+.pub-link { margin-left: 10px; }
+
+.timeline { list-style: none; padding: 0; display: grid; gap: 10px; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.project { display: block; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; color: var(--text); text-decoration: none; }
+.project:hover { border-color: color-mix(in srgb, var(--accent), var(--border)); transform: translateY(-1px); }
+
+.contact-form { display: grid; gap: 12px; }
+.contact-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.contact-form input, .contact-form textarea {
+  width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--card); color: var(--text);
+}
+.contact-form label span { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+
+.site-footer { border-top: 1px solid var(--border); margin-top: 40px; }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+.footer-nav a { color: var(--muted); text-decoration: none; margin-left: 14px; }
+.footer-nav a:hover { color: var(--text); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; text-align: left; }
+  .hero-media { order: -1; }
+  .cards { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr; }
+  .contact-form .row { grid-template-columns: 1fr; }
+}

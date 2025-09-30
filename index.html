@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Osman Demirbağ — Sociologist & Researcher</title>
+  <meta name="description" content="Osman Demirbağ — research on land-based welfare, agrarian political economy, party manifestos, and European integration.">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preload" href="styles.css" as="style">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+      <a class="logo" href="#top" aria-label="Home">OD</a>
+      <button id="themeToggle" class="btn btn-ghost" aria-label="Toggle theme">☾</button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero container">
+      <div class="hero-text">
+        <h1>Osman Demirbağ</h1>
+        <p class="subtitle">Sociologist & Researcher — Agrarian political economy, land-based welfare, and party manifestos (1890–2025)</p>
+        <div class="cta">
+          <a class="btn" href="#research">Research</a>
+          <a class="btn btn-ghost" href="#publications">Publications</a>
+          <a class="btn btn-ghost" href="files/CV_Osman_Demirbag.pdf" target="_blank" rel="noopener">CV</a>
+        </div>
+        <ul class="meta">
+          <li>Berlin, Germany</li>
+          <li><a href="mailto:hello@osmandemirbag.com">hello@osmandemirbag.com</a></li>
+          <li>
+            <a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar</a> · 
+            <a href="https://orcid.org/" target="_blank" rel="noopener">ORCID</a> · 
+            <a href="https://github.com/osmandemirbag" target="_blank" rel="noopener">GitHub</a>
+          </li>
+        </ul>
+      </div>
+      <div class="hero-media">
+        <img src="assets/profile.jpg" alt="Profile photo of Osman Demirbağ">
+      </div>
+    </section>
+
+    <section id="about" class="container section">
+      <h2>About</h2>
+      <p>I’m a PhD researcher in sociology (FU Berlin), studying how states pursue <strong>welfare through land politics</strong>—agrarian credit, land reform, rural infrastructure, and price supports—and how these interact with labour-based welfare and party competition. I build large-scale historical datasets (1890–2025), including a Historical Comparative Manifesto Corpus (~3,000+ manifestos), to model long- and short-run political dynamics.</p>
+    </section>
+
+    <section id="research" class="container section">
+      <h2>Research</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Welfare Through Land Politics</h3>
+          <p>A historic-comparative analysis of agrarian political economy and the trade-off with labour-based welfare, integrating manifesto data with macro-structural indicators.</p>
+          <ul class="tags"><li>agrarian political economy</li><li>welfare state</li><li>comparative-historical</li></ul>
+        </article>
+        <article class="card">
+          <h3>Party Manifestos, 1890–2025</h3>
+          <p>Building and modelling a Historical Comparative Manifesto Corpus (HCMP) to track issue salience and framing across time and countries.</p>
+          <ul class="tags"><li>text analysis</li><li>long-run politics</li><li>panel models</li></ul>
+        </article>
+        <article class="card">
+          <h3>Credit, Housing, and Land</h3>
+          <p>Linking land inequality, mortgage credit, and public investment banks to political preferences and policy outcomes.</p>
+          <ul class="tags"><li>housing</li><li>credit</li><li>political economy</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="publications" class="container section">
+      <h2>Publications & Working Papers</h2>
+      <ul class="pubs">
+        <li>
+          <span class="pub-title">Welfare Through Land Politics: A historic‑comparative approach</span>
+          <span class="pub-venue">ECPR Paper (in progress)</span>
+          <a class="pub-link" href="#" target="_blank" rel="noopener">PDF</a>
+        </li>
+        <li>
+          <span class="pub-title">Varieties of Agrarian Capitalism</span>
+          <span class="pub-venue">Draft syllabus / project</span>
+          <a class="pub-link" href="#" target="_blank" rel="noopener">Link</a>
+        </li>
+      </ul>
+      <p class="note">Want this auto-populated? Replace <code>publications.json</code> and I’ll render it dynamically.</p>
+    </section>
+
+    <section id="teaching" class="container section">
+      <h2>Teaching</h2>
+      <ul class="timeline">
+        <li><strong>Introduction to R & Text Analysis</strong> — visualization, data wrangling, and simple regression.</li>
+        <li><strong>Sociology of Land & Agriculture</strong> — comparative political economy, land reform, and welfare.</li>
+      </ul>
+    </section>
+
+    <section id="projects" class="container section">
+      <h2>Projects</h2>
+      <div class="grid">
+        <a class="project" href="https://github.com/osmandemirbag" target="_blank" rel="noopener">
+          <h3>Code & Data</h3>
+          <p>R and Python repos for manifesto analysis, ECM diagnostics, and text pipelines.</p>
+        </a>
+        <a class="project" href="#" target="_blank" rel="noopener">
+          <h3>Talks & Slides</h3>
+          <p>Conference talks and invited lectures.</p>
+        </a>
+      </div>
+    </section>
+
+    <section id="contact" class="container section">
+      <h2>Contact</h2>
+      <form class="contact-form" name="contact" method="POST" data-netlify="true">
+        <input type="hidden" name="form-name" value="contact">
+        <div class="row">
+          <label>
+            <span>Name</span>
+            <input name="name" required>
+          </label>
+          <label>
+            <span>Email</span>
+            <input name="email" type="email" required>
+          </label>
+        </div>
+        <label>
+          <span>Message</span>
+          <textarea name="message" rows="5" required></textarea>
+        </label>
+        <button class="btn" type="submit">Send</button>
+      </form>
+      <p class="tiny">Or email me directly: <a href="mailto:hello@osmandemirbag.com">hello@osmandemirbag.com</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Osman Demirbağ. All rights reserved.</p>
+      <nav class="footer-nav">
+        <a href="#about">About</a>
+        <a href="#research">Research</a>
+        <a href="#publications">Publications</a>
+        <a href="#teaching">Teaching</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

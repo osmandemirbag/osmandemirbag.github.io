@@ -54,7 +54,7 @@
     .meta a{color:inherit}
     .hero-media img{width:100%; height:auto; border-radius:var(--radius); box-shadow:var(--shadow); display:block; object-fit:cover}
 
-    /* Side-by-side sections (About → Contact) */
+    /* Side-by-side sections (About → Projects) */
     .sections-grid{display:grid; gap:22px; grid-template-columns: repeat(2, minmax(0,1fr)); padding-block:18px 64px;}
     @media (max-width: 900px){ .hero{grid-template-columns:1fr} .sections-grid{grid-template-columns:1fr} }
 
@@ -71,10 +71,6 @@
     .grid-projects{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px}
     .project{display:block; padding:14px; border:1px solid var(--border); border-radius:12px; text-decoration:none; color:var(--text)}
     .project:hover{border-color:var(--text)}
-    .contact-form .row{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-    .contact-form label{display:block; font-size:14px; color:var(--muted)}
-    .contact-form input,.contact-form textarea{width:100%; margin-top:.35rem; border:1px solid var(--border); background:transparent; color:var(--text); border-radius:10px; padding:.7rem .8rem; font:inherit}
-    .contact-form textarea{resize:vertical; min-height:140px}
     .tiny{font-size:12px; color:var(--muted)}
     .site-footer{border-top:1px solid var(--border); padding-block:22px}
     .footer-inner{display:flex; align-items:center; justify-content:space-between; gap:18px}
@@ -126,7 +122,6 @@
         <li><a href="#publications">Publications</a></li>
         <li><a href="#teaching">Teaching</a></li>
         <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
       </ul>
       <button id="themeToggle" class="btn btn-ghost" aria-label="Toggle dark mode" aria-pressed="false" title="Toggle theme">☾</button>
     </nav>
@@ -178,14 +173,14 @@
           <ul class="tags"><li>agrarian political economy</li><li>welfare state</li><li>comparative-historical</li></ul>
         </article>
         <article>
-         <h3>Land, Agriculture and Housing </h3>
-          <p>Linking state interventions in these markets to political preferences and policy outcomes.</p>
-          <ul class="tags"><li>housing</li><li>credit</li><li>political economy</li></ul>
+          <h3>Land, Agriculture and Housing</h3>
+          <p>Linking state interventions in these markets to political and economic structures and actions of actors.</p>
+          <ul class="tags"><li>historical sociology</li><li>economic sociology</li><li>political economy</li></ul>
         </article>
         <article>
-   <h3>Party Manifestos, 1890–2025</h3>
-          <p>Building and modelling long-run <em>manifesto data</em> to track issue saliences and positions across time and countries.</p>
-          <ul class="tags"><li>text analysis</li><li>long-run politics</li><li>panel models</li></ul>
+          <h3>Party Politics, 1890–2025</h3>
+          <p>Building and modelling long-run <em>manifesto, election and administrative data</em> to track politics across time and countries.</p>
+          <ul class="tags"><li>text analysis</li><li>spatial analysis</li><li>long-run politics</li></ul>
         </article>
       </section>
 
@@ -227,32 +222,6 @@
           </a>
         </div>
       </section>
-
-      <section id="contact" class="card" aria-labelledby="contact-title">
-        <h2 id="contact-title">Contact</h2>
-        <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" aria-describedby="form-help" autocomplete="on">
-          <input type="hidden" name="form-name" value="contact">
-          <p class="visually-hidden">
-            <label>Don’t fill this out if you’re human: <input name="bot-field"></label>
-          </p>
-          <div class="row">
-            <label for="name">Name
-              <input id="name" name="name" required autocomplete="name" inputmode="text">
-            </label>
-            <label for="email">Email
-              <input id="email" name="email" type="email" required autocomplete="email" inputmode="email">
-            </label>
-          </div>
-          <label for="message">Message
-            <textarea id="message" name="message" rows="6" required></textarea>
-          </label>
-          <div style="display:flex; gap:10px; align-items:center; margin-top:.6rem">
-            <button class="btn" type="submit">Send</button>
-            <p id="form-help" class="tiny"></p>
-          </div>
-        </form>
-        <p class="tiny" style="margin-top:10px">Prefer email? <a href="mailto:o.demirbag@fu-berlin.de">o.demirbag@fu-berlin.de</a></p>
-      </section>
     </div>
     <!-- Side-by-side content ends here -->
   </main>
@@ -266,7 +235,6 @@
         <a href="#publications">Publications</a>
         <a href="#teaching">Teaching</a>
         <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
       </nav>
     </div>
   </footer>
@@ -299,4 +267,5 @@
   </script>
 </body>
 </html>
+
 

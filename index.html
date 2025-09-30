@@ -1,23 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- Basic -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Osman Demirbağ — Sociologist & Researcher</title>
   <meta name="description" content="Osman Demirbağ — research on land-based welfare, agrarian political economy, and party–movement politics.">
   <link rel="canonical" href="https://osmandemirbag.com/">
-
-  <!-- Icons -->
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="icon" type="image/png" href="assets/favicon.png" sizes="32x32">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-
-  <!-- Theme & Color -->
   <meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-
-  <!-- Social / Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Osman Demirbağ — Sociologist & Researcher">
   <meta property="og:description" content="Research on land-based welfare, agrarian political economy, and party–movement politics.">
@@ -28,62 +19,101 @@
   <meta name="twitter:description" content="Research on land-based welfare, agrarian political economy, and party–movement politics.">
   <meta name="twitter:image" content="assets/og-image.jpg">
 
-  <!-- Preloads (ensure these files exist) -->
-  <link rel="preload" href="styles.css" as="style">
-  <link rel="preload" href="assets/profile@2x.jpg" as="image" imagesrcset="assets/profile.jpg 1x, assets/profile@2x.jpg 2x" imagesizes="(min-width: 900px) 420px, 50vw" fetchpriority="high">
+  <style>
+    :root{
+      --bg:#ffffff; --text:#0b0b0c; --muted:#666; --accent:#0f766e; --card:#f7f7f8; --border:#e9eaee;
+      --radius:14px; --shadow:0 6px 20px rgba(0,0,0,.06);
+    }
+    [data-theme="dark"]{
+      --bg:#0b0b0c; --text:#f2f3f5; --muted:#a5a8ad; --accent:#5eead4; --card:#111214; --border:#1c1d21;
+      --shadow:0 6px 24px rgba(0,0,0,.35);
+    }
+    html{scroll-behavior:smooth;}
+    *{box-sizing:border-box}
+    body{
+      margin:0; font:400 16px/1.7 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:var(--bg); color:var(--text);
+    }
+    .container{max-width:1100px; margin-inline:auto; padding:0 clamp(16px,4vw,28px);}
+    .site-header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(140%) blur(8px); background:color-mix(in oklab, var(--bg) 85%, transparent); border-bottom:1px solid var(--border);}
+    .nav{display:flex; align-items:center; justify-content:space-between; min-height:64px;}
+    .logo{display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; background:var(--text); color:var(--bg); font-weight:700; text-decoration:none; letter-spacing:.5px;}
+    .nav-links{display:flex; gap:18px; list-style:none; padding:0; margin:0;}
+    .nav a{color:var(--text); text-decoration:none}
+    .nav a:hover{color:var(--accent)}
+    .btn{display:inline-block; border:1px solid var(--text); padding:.6rem .9rem; border-radius:999px; text-decoration:none; color:var(--text); transition:transform .06s ease, background .2s ease, border-color .2s ease}
+    .btn:hover{transform:translateY(-1px); background:var(--text); color:var(--bg)}
+    .btn-ghost{border-color:var(--border); background:transparent}
+    #themeToggle{cursor:pointer}
 
-  <!-- Styles & Scripts -->
-  <link rel="stylesheet" href="styles.css">
+    .hero{display:grid; grid-template-columns: 1.2fr .8fr; gap:32px; padding-block:48px; align-items:center;}
+    .hero-text h1{font-size: clamp(36px, 6vw, 56px); line-height:1.05; margin:.2rem 0 .8rem 0;}
+    .subtitle{color:var(--muted); font-size:clamp(16px,2.4vw,18px); margin:0 0 16px 0}
+    .cta{display:flex; gap:10px; margin:14px 0 12px}
+    .meta{list-style:none; padding:0; margin:10px 0 0; color:var(--muted)}
+    .meta a{color:inherit}
+    .hero-media img{width:100%; height:auto; border-radius:var(--radius); box-shadow:var(--shadow); display:block; object-fit:cover}
+
+    /* Side-by-side sections (About → Contact) */
+    .sections-grid{display:grid; gap:22px; grid-template-columns: repeat(2, minmax(0,1fr)); padding-block:18px 64px;}
+    @media (max-width: 900px){ .hero{grid-template-columns:1fr} .sections-grid{grid-template-columns:1fr} }
+
+    section.card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow);}
+    h2{font-size:clamp(22px,2.4vw,26px); margin:0 0 14px 0}
+    h3{margin:.2rem 0 .4rem 0; font-size:18px}
+    p{margin:.4rem 0 1rem 0}
+    ul{margin:.2rem 0 0 1.1rem}
+    .tags{display:flex; flex-wrap:wrap; gap:6px; list-style:none; margin:10px 0 0; padding:0}
+    .tags li{border:1px solid var(--border); padding:.25rem .55rem; border-radius:999px; font-size:12px; color:var(--muted)}
+    .pubs{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:14px}
+    .pub .pub-title{font-weight:600}
+    .timeline{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px}
+    .grid-projects{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px}
+    .project{display:block; padding:14px; border:1px solid var(--border); border-radius:12px; text-decoration:none; color:var(--text)}
+    .project:hover{border-color:var(--text)}
+    .contact-form .row{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+    .contact-form label{display:block; font-size:14px; color:var(--muted)}
+    .contact-form input,.contact-form textarea{width:100%; margin-top:.35rem; border:1px solid var(--border); background:transparent; color:var(--text); border-radius:10px; padding:.7rem .8rem; font:inherit}
+    .contact-form textarea{resize:vertical; min-height:140px}
+    .tiny{font-size:12px; color:var(--muted)}
+    .site-footer{border-top:1px solid var(--border); padding-block:22px}
+    .footer-inner{display:flex; align-items:center; justify-content:space-between; gap:18px}
+    .footer-nav{display:flex; gap:14px}
+    .skip-link{position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden}
+    .skip-link:focus{left:16px; top:10px; width:auto; height:auto; padding:.5rem .75rem; background:var(--text); color:var(--bg); border-radius:8px}
+    .visually-hidden{position:absolute!important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); border:0}
+  </style>
+
   <script>
-    // Respect system theme on first paint
     (function () {
       const stored = localStorage.getItem('theme');
-      if (stored === 'dark' || (stored === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      if (stored === 'dark' || (stored === null && matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.dataset.theme = 'dark';
       }
     }());
   </script>
-  <script defer src="script.js"></script>
 
-  <!-- Structured Data -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Osman Demirbağ",
-    "jobTitle": "Sociologist & Researcher",
-    "affiliation": {
-      "@type": "CollegeOrUniversity",
-      "name": "Freie Universität Berlin",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Berlin",
-        "addressCountry": "DE"
-      }
-    },
-    "email": "mailto:odemirbag@fu-berlin.de",
-    "url": "https://osmandemirbag.com/",
-    "image": "https://osmandemirbag.com/assets/profile.jpg",
-    "sameAs": [
-      "https://scholar.google.com/citations?user=hm3PrVgAAAAJ",
-      "https://github.com/osmandemirbag",
-      "https://www.linkedin.com/in/osmandemirbag/"
-    ],
-    "knowsAbout": [
-      "agrarian political economy",
-      "land-based welfare",
-      "party–movement politics",
-      "text analysis",
-      "comparative historical methods"
-    ],
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Berlin",
-      "addressCountry": "DE"
+    {
+      "@context":"https://schema.org",
+      "@type":"Person",
+      "name":"Osman Demirbağ",
+      "jobTitle":"Sociologist & Researcher",
+      "affiliation":{"@type":"CollegeOrUniversity","name":"Freie Universität Berlin","address":{"@type":"PostalAddress","addressLocality":"Berlin","addressCountry":"DE"}},
+      "email":"mailto:o.demirbag@fu-berlin.de",
+      "url":"https://osmandemirbag.com/",
+      "image":"https://osmandemirbag.com/assets/profile.jpg",
+      "sameAs":[
+        "https://scholar.google.com/citations?user=hm3PrVgAAAAJ",
+        "https://github.com/osmandemirbag",
+        "https://www.linkedin.com/in/osmandemirbag/"
+      ],
+      "knowsAbout":["agrarian political economy","land-based welfare","party–movement politics","text analysis","comparative historical methods"],
+      "address":{"@type":"PostalAddress","addressLocality":"Berlin","addressCountry":"DE"}
     }
-  }
   </script>
 </head>
+
 <body id="top">
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -102,7 +132,7 @@
     </nav>
   </header>
 
-  <main id="main" role="main">
+  <main id="main">
     <section class="hero container" aria-labelledby="hero-title">
       <div class="hero-text">
         <h1 id="hero-title">Osman Demirbağ</h1>
@@ -114,7 +144,7 @@
         </div>
         <ul class="meta" aria-label="Contact and profiles">
           <li>Berlin, Germany</li>
-          <li><a href="mailto:odemirbag@fu-berlin.de">odemirbag@fu-berlin.de</a></li>
+          <li><a href="mailto:o.demirbag@fu-berlin.de">o.demirbag@fu-berlin.de</a></li>
           <li>
             <a href="https://scholar.google.com/citations?user=hm3PrVgAAAAJ" target="_blank" rel="noopener noreferrer">Google Scholar</a> ·
             <a href="https://github.com/osmandemirbag" target="_blank" rel="noopener noreferrer">GitHub</a> ·
@@ -127,114 +157,104 @@
           src="assets/profile.jpg"
           srcset="assets/profile.jpg 1x, assets/profile@2x.jpg 2x"
           sizes="(min-width: 900px) 420px, 50vw"
-          width="420"
-          height="520"
-          alt="Portrait of Osman Demirbağ"
-          fetchpriority="high">
+          width="420" height="520"
+          alt="Portrait of Osman Demirbağ" fetchpriority="high">
         <figcaption class="visually-hidden">Portrait photo</figcaption>
       </figure>
     </section>
 
-    <section id="about" class="container section" aria-labelledby="about-title">
-      <h2 id="about-title">About</h2>
-      <p>I’m a PhD researcher in sociology (Freie Universität Berlin), studying how states pursue <strong>welfare through land politics</strong>—agrarian credit, land reform, rural infrastructure, and price supports—and how these interact with labour-based welfare and party competition. I build large-scale historical-comparative (1850–2025) datasets to model long- and short-run political dynamics.</p>
-    </section>
+    <!-- Side-by-side content starts here -->
+    <div class="container sections-grid">
+      <section id="about" class="card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p>I’m a PhD researcher in sociology (Freie Universität Berlin), studying how states pursue <strong>welfare through land politics</strong>—agrarian credit, land reform, rural infrastructure, and price supports—and how these interact with labour-based welfare and party competition. I build large-scale historical-comparative (1850–2025) datasets to model long- and short-run political dynamics.</p>
+      </section>
 
-    <section id="research" class="container section" aria-labelledby="research-title">
-      <h2 id="research-title">Research</h2>
-      <div class="cards" role="list">
-        <article class="card" role="listitem">
+      <section id="research" class="card" aria-labelledby="research-title">
+        <h2 id="research-title">Research</h2>
+        <article>
           <h3>Welfare Through Land Politics</h3>
-          <p>A historical-comparative analysis of agrarian political economy and the trade-off with labour-based welfare, integrating manifesto data with macro-structural indicators.</p>
-          <ul class="tags" aria-label="Keywords">
-            <li>agrarian political economy</li><li>welfare state</li><li>comparative-historical</li>
-          </ul>
+          <p>Historical-comparative analysis of agrarian political economy and its trade-offs with labour-based welfare, integrating manifesto data with macro-structural indicators.</p>
+          <ul class="tags"><li>agrarian political economy</li><li>welfare state</li><li>comparative-historical</li></ul>
         </article>
-        <article class="card" role="listitem">
+        <article>
           <h3>Party Manifestos, 1890–2025</h3>
           <p>Building and modelling long-run <em>manifesto data</em> to track issue salience and framing across time and countries.</p>
-          <ul class="tags" aria-label="Keywords">
-            <li>text analysis</li><li>long-run politics</li><li>panel models</li>
-          </ul>
+          <ul class="tags"><li>text analysis</li><li>long-run politics</li><li>panel models</li></ul>
         </article>
-        <article class="card" role="listitem">
+        <article>
           <h3>Credit, Housing, and Land</h3>
           <p>Linking land inequality, mortgage credit, and public banks to political preferences and policy outcomes.</p>
-          <ul class="tags" aria-label="Keywords">
-            <li>housing</li><li>credit</li><li>political economy</li>
-          </ul>
+          <ul class="tags"><li>housing</li><li>credit</li><li>political economy</li></ul>
         </article>
-      </div>
-    </section>
+      </section>
 
-    <section id="publications" class="container section" aria-labelledby="pubs-title">
-      <h2 id="pubs-title">Publications &amp; Working Papers</h2>
-      <ul class="pubs">
-        <li class="pub">
-          <span class="pub-title">Welfare Through Land Politics: A historical-comparative approach</span>
-          <span class="pub-venue">Presented at ECPR (in progress)</span>
-          <a class="pub-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open PDF in a new tab">PDF</a>
-        </li>
-        <li class="pub">
-          <span class="pub-title">“Trade”-off between Relative Salience of Economy and Culture: Comparative Analysis of Electoral Politics in Western Democracies, 1890–2024</span>
-          <span class="pub-venue">Presented at Mid-term Conference ESA RN09 Economic Sociology (in progress)</span>
-          <a class="pub-link" href="#" target="_blank" rel="noopener noreferrer">Link</a>
-        </li>
-      </ul>
-      <p class="note">Want this auto-populated? Replace <code>publications.json</code>; the site can render it dynamically.</p>
-    </section>
+      <section id="publications" class="card" aria-labelledby="pubs-title">
+        <h2 id="pubs-title">Publications &amp; Working Papers</h2>
+        <ul class="pubs">
+          <li class="pub">
+            <span class="pub-title">Welfare Through Land Politics: A historical-comparative approach</span><br>
+            <span class="pub-venue">Presented at ECPR (in progress)</span> —
+            <a class="pub-link" href="#" target="_blank" rel="noopener noreferrer">PDF</a>
+          </li>
+          <li class="pub">
+            <span class="pub-title">“Trade”-off between Relative Salience of Economy and Culture: Comparative Analysis of Electoral Politics in Western Democracies, 1890–2024</span><br>
+            <span class="pub-venue">Presented at Mid-term Conference ESA RN09 Economic Sociology (in progress)</span> —
+            <a class="pub-link" href="#" target="_blank" rel="noopener noreferrer">Link</a>
+          </li>
+        </ul>
+      </section>
 
-    <section id="teaching" class="container section" aria-labelledby="teaching-title">
-      <h2 id="teaching-title">Teaching</h2>
-      <ul class="timeline">
-        <li><strong>WiSe 25/26:</strong> Sociology of Agriculture</li>
-        <li><strong>WiSe 25/26:</strong> Sociology of Land in the United States and Canada</li>
-        <li><strong>SoSe 25:</strong> Classical Sociology of Class and State</li>
-        <li><strong>WiSe 24/25:</strong> Methods in Quantitative Text Analysis: Exploring North American Novels</li>
-        <li><strong>SoSe 24:</strong> Introducing Text Analysis with R through Political Party Manifestos from the US</li>
-      </ul>
-    </section>
+      <section id="teaching" class="card" aria-labelledby="teaching-title">
+        <h2 id="teaching-title">Teaching</h2>
+        <ul class="timeline">
+          <li><strong>WiSe 25/26:</strong> Sociology of Agriculture</li>
+          <li><strong>WiSe 25/26:</strong> Sociology of Land in the United States and Canada</li>
+          <li><strong>SoSe 25:</strong> Classical Sociology of Class and State</li>
+          <li><strong>WiSe 24/25:</strong> Methods in Quantitative Text Analysis: Exploring North American Novels</li>
+          <li><strong>SoSe 24:</strong> Introducing Text Analysis with R through Political Party Manifestos from the US</li>
+        </ul>
+      </section>
 
-    <section id="projects" class="container section" aria-labelledby="projects-title">
-      <h2 id="projects-title">Projects</h2>
-      <div class="grid">
-        <a class="project" href="https://github.com/osmandemirbag" target="_blank" rel="noopener noreferrer">
-          <h3>Code &amp; Data</h3>
-          <p>R and Python repos for manifesto analysis, ECM diagnostics, and text pipelines.</p>
-        </a>
-        <a class="project" href="#" target="_blank" rel="noopener noreferrer">
-          <h3>Talks &amp; Slides</h3>
-          <p>Conference talks and invited lectures.</p>
-        </a>
-      </div>
-    </section>
-
-    <section id="contact" class="container section" aria-labelledby="contact-title">
-      <h2 id="contact-title">Contact</h2>
-
-      <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" aria-describedby="form-help" autocomplete="on">
-        <input type="hidden" name="form-name" value="contact">
-        <p class="visually-hidden">
-          <label>Don’t fill this out if you’re human: <input name="bot-field"></label>
-        </p>
-
-        <div class="row">
-          <label for="name"><span>Name</span></label>
-          <input id="name" name="name" required autocomplete="name" inputmode="text">
-
-          <label for="email"><span>Email</span></label>
-          <input id="email" name="email" type="email" required autocomplete="email" inputmode="email">
+      <section id="projects" class="card" aria-labelledby="projects-title">
+        <h2 id="projects-title">Projects</h2>
+        <div class="grid-projects">
+          <a class="project" href="https://github.com/osmandemirbag" target="_blank" rel="noopener noreferrer">
+            <h3>Code &amp; Data</h3>
+            <p>R and Python repos for data analyses used in my research</p>
+          </a>
+          <a class="project" href="#" target="_blank" rel="noopener noreferrer">
+          </a>
         </div>
+      </section>
 
-        <label for="message"><span>Message</span></label>
-        <textarea id="message" name="message" rows="5" required></textarea>
-
-        <button class="btn" type="submit">Send</button>
-        <p id="form-help" class="tiny">This form uses Netlify. Your message will be emailed to me.</p>
-      </form>
-
-      <p class="tiny">Or email me directly: <a href="mailto:odemirbag@fu-berlin.de">odemirbag@fu-berlin.de</a></p>
-    </section>
+      <section id="contact" class="card" aria-labelledby="contact-title">
+        <h2 id="contact-title">Contact</h2>
+        <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" aria-describedby="form-help" autocomplete="on">
+          <input type="hidden" name="form-name" value="contact">
+          <p class="visually-hidden">
+            <label>Don’t fill this out if you’re human: <input name="bot-field"></label>
+          </p>
+          <div class="row">
+            <label for="name">Name
+              <input id="name" name="name" required autocomplete="name" inputmode="text">
+            </label>
+            <label for="email">Email
+              <input id="email" name="email" type="email" required autocomplete="email" inputmode="email">
+            </label>
+          </div>
+          <label for="message">Message
+            <textarea id="message" name="message" rows="6" required></textarea>
+          </label>
+          <div style="display:flex; gap:10px; align-items:center; margin-top:.6rem">
+            <button class="btn" type="submit">Send</button>
+            <p id="form-help" class="tiny">This form uses Netlify.</p>
+          </div>
+        </form>
+        <p class="tiny" style="margin-top:10px">Prefer email? <a href="mailto:o.demirbag@fu-berlin.de">o.demirbag@fu-berlin.de</a></p>
+      </section>
+    </div>
+    <!-- Side-by-side content ends here -->
   </main>
 
   <footer class="site-footer" role="contentinfo">
@@ -251,12 +271,9 @@
     </div>
   </footer>
 
-  <noscript>
-    <p style="padding:1rem" role="note">JavaScript is disabled. The site works, but theme toggling is unavailable.</p>
-  </noscript>
+  <noscript><p style="padding:1rem">JavaScript is disabled. Theme toggle is unavailable.</p></noscript>
 
   <script>
-    // Small enhancements: current year & accessible theme toggle state
     (function () {
       const yearEl = document.getElementById('year');
       if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -270,23 +287,16 @@
         btn.textContent = isDark ? '☀' : '☾';
         btn.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
       }
-
       btn.addEventListener('click', function () {
         const root = document.documentElement;
         const nowDark = root.dataset.theme === 'dark' ? '' : 'dark';
-        if (nowDark) {
-          root.dataset.theme = 'dark';
-          localStorage.setItem('theme', 'dark');
-        } else {
-          root.dataset.theme = '';
-          localStorage.setItem('theme', 'light');
-        }
+        if (nowDark) { root.dataset.theme = 'dark'; localStorage.setItem('theme','dark'); }
+        else { root.dataset.theme = ''; localStorage.setItem('theme','light'); }
         setPressed();
       });
-
-      // Initialize label/state
       setPressed();
     }());
   </script>
 </body>
 </html>
+

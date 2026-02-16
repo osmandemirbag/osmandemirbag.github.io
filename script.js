@@ -4,13 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroSection = document.getElementById('hero');
 
     // Reveal Content Flow
+    // Reveal Content Flow
     enterBtn.addEventListener('click', () => {
-        // Unhide main content
-        mainContent.classList.remove('hidden');
-        mainContent.classList.add('visible');
-
         // Smooth scroll to About section
-        document.getElementById('about').scrollIntoView({ 
+        document.getElementById('about').scrollIntoView({
             behavior: 'smooth',
             block: 'start'
         });
@@ -18,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Optional: Reveal content on scroll if user scrolls down instead of clicking?
     // Let's keep it strict for now to match "first it should open only introduction"
-    
+
     // Intersection Observer for fade-in elements in main content
     const observerOptions = {
         threshold: 0.1

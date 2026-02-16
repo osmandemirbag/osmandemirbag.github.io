@@ -89,9 +89,9 @@ a:hover {
 }
 
 .profile-photo {
-    width: 120px;
-    /* Much smaller */
-    height: 120px;
+    width: 240px;
+    /* x2 size */
+    height: 240px;
     border-radius: 50%;
     object-fit: cover;
     filter: grayscale(100%);
@@ -139,7 +139,7 @@ a:hover {
     margin: 0 0 2rem 0;
     /* Left aligned margin */
     max-width: 600px;
-    font-style: italic;
+    font-style: normal;
 }
 
 .enter-button {

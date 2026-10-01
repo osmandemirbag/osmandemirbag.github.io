@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chinese Investment in Turkey — Tracker</title>
-<meta name="description" content="Chinese and Hong Kong investment projects in Turkey, 2008–2022, reconstructed from the Dünya Gazetesi archive with article-level evidence. Osman Demirbağ, Burak Gürel, Kadir Selamet.">
+<meta name="description" content="Chinese and Hong Kong investment projects in Turkey, 2008–2024, reconstructed from Turkish newspaper archives (Dünya, Aydınlık) and other news reports, with article-level evidence. Osman Demirbağ, Burak Gürel, Kadir Selamet.">
 <style>
 :root{
   color-scheme:light;
@@ -240,9 +240,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 
 <main id="top">
   <div class="wrap hero">
-    <div class="eyebrow">Research data · Dünya Gazetesi archive · <span id="span"></span></div>
+    <div class="eyebrow">Research data · Dünya and Aydınlık archives · <span id="span"></span></div>
     <h1>Chinese investment in Turkey</h1>
-    <p class="lede">Every Chinese, Hong Kong and Chinese-owned investment project in Turkey reported by the business daily Dünya, from first rumour to plant opening or exit. Each project is backed by quotes from the original articles.</p>
+    <p class="lede">Every Chinese, Hong Kong and Chinese-owned investment project in Turkey reported in the Turkish press, from first rumour to plant opening or exit. Each project is backed by quotes from the original articles.</p>
     <div class="authors">
       <span class="chip-person"><i>OD</i>Osman Demirbağ</span>
       <span class="chip-person"><i>BG</i>Burak Gürel</span>
@@ -365,7 +365,7 @@ const bucketOf=p=>BUCKETS.find(b=>b.sg.includes(p.sg))||BUCKETS[4];
 const ORIG={'CN':'Mainland China','HK':'Hong Kong','CN-hidden':'Chinese-owned foreign brand'};
 P.forEach(p=>{p.b=bucketOf(p).id;p.y0=yr(p.fe||p.f);p.y1=Math.max(yr(p.l)||p.y0,p.y0);p.search=[p.name,p.inv,p.s,p.bs,p.prov.join(' '),p.sum,p.k].join(' ').toLocaleLowerCase('tr')});
 const EV={};E.forEach(e=>(EV[e.p]=EV[e.p]||[]).push(e));
-const Y0=+meta.corpus_first.slice(0,4), Y1=+meta.corpus_last.slice(0,4);
+const Y0=Math.min(+meta.corpus_first.slice(0,4),...P.map(p=>p.y0).filter(Boolean)), Y1=Math.max(+meta.corpus_last.slice(0,4),...P.map(p=>p.y1).filter(Boolean));
 $('#span').textContent=`${Y0}–${Y1}`;
 
 /* ---------- state ---------- */
@@ -498,8 +498,9 @@ function evHtml(e){
   const bits=[e.f,e.a,e.j?e.j+' jobs':'',e.c].filter(Boolean).map(esc).join(' · ');
   if(e.t==='X')return `<div class="ev t-X"><div class="when">${esc(e.d)}</div><div class="what">${esc(cap(e.e))}<span class="tag">Other news source</span></div>${bits?`<div class="src">${bits}</div>`:''}<div class="sumx">${esc(e.q)}</div><div class="src">${esc(e.h)} · <a href="${esc(e.u)}" target="_blank" rel="noopener">Article ↗</a></div>${e.n?`<div class="note">${esc(e.n)}</div>`:''}</div>`;
   return `<div class="ev t-${e.t}"><div class="when">${esc(e.d)}</div><div class="what">${esc(cap(e.e))}${e.t!=='Y'?`<span class="tag">${TL[e.t]}</span>`:''}</div>${bits?`<div class="src">${bits}</div>`:''}
-  <blockquote lang="tr">${esc(e.q)}</blockquote><div class="src">${esc(e.h)} · <a href="${esc(e.u)}" target="_blank" rel="noopener">Dünya article ↗</a></div>${e.n?`<div class="note">${esc(e.n)}</div>`:''}</div>`}
+  <blockquote lang="tr">${esc(e.q)}</blockquote><div class="src">${esc(e.h)} · <a href="${esc(e.u)}" target="_blank" rel="noopener">${srcName(e.u)} article ↗</a></div>${e.n?`<div class="note">${esc(e.n)}</div>`:''}</div>`}
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):'';
+const srcName=u=>/dunya\.com/.test(u)?'Dünya':/aydinlik\.com/.test(u)?'Aydınlık':'News';
 let lastFocus=null;
 function openP(k){
   const p=P.find(x=>x.k===k);if(!p)return;lastFocus=document.activeElement;
@@ -521,7 +522,7 @@ $('#scrim').onclick=closeP;addEventListener('keydown',e=>{if(e.key==='Escape')cl
 
 /* ---------- unattributed signals ---------- */
 $('#sig summary').textContent=`Unattributed signals (${D.general.length})`;
-$('#siglist').innerHTML=D.general.map(g=>`<div class="sigitem"><div class="when" style="color:var(--muted);font-size:12.5px">${esc(g.d)} · ${esc(g.f)}</div><blockquote lang="tr" style="margin:6px 0;color:var(--ink)">${esc(g.q)}</blockquote><div class="src" style="font-size:12.5px">${esc(g.h)} · <a href="${esc(g.u)}" target="_blank" rel="noopener">Dünya ↗</a>${g.n?` · <span style="color:var(--muted)">${esc(g.n)}</span>`:''}</div></div>`).join('');
+$('#siglist').innerHTML=D.general.map(g=>`<div class="sigitem"><div class="when" style="color:var(--muted);font-size:12.5px">${esc(g.d)} · ${esc(g.f)}</div><blockquote lang="tr" style="margin:6px 0;color:var(--ink)">${esc(g.q)}</blockquote><div class="src" style="font-size:12.5px">${esc(g.h)} · <a href="${esc(g.u)}" target="_blank" rel="noopener">${srcName(g.u)} ↗</a>${g.n?` · <span style="color:var(--muted)">${esc(g.n)}</span>`:''}</div></div>`).join('');
 
 /* ---------- downloads ---------- */
 const kb=b=>b>1e6?(b/1e6).toFixed(1)+' MB':Math.round(b/1e3)+' KB';
@@ -536,13 +537,13 @@ $('#cb tbody').innerHTML=CB.map(r=>`<tr><td>${esc(r[0])}</td><td><code>${esc(r[1
 
 /* ---------- method ---------- */
 $('#methodbody').innerHTML=`
-<p><b>Source.</b> Articles from the business daily Dünya, ${meta.corpus_first.slice(0,4)} to ${meta.corpus_last.slice(0,4)}, complemented by other news reports where Dünya is silent. Every claim links to the article it comes from.</p>
+<p><b>Sources.</b> The business dailies Dünya (2008–2022) and Aydınlık (2011–2023), complemented by other news reports for projects these papers do not cover. Every claim links to the article it comes from.</p>
 <p><b>Scope.</b> Investment in Turkey by mainland Chinese firms, Hong Kong firms and foreign brands owned by Chinese groups (for example Pirelli under ChemChina, Riot Games under Tencent, Salcomp under Luxshare). Taiwanese investors are excluded. Construction contracts and Chinese loans are shown separately and not counted as investment.</p>
 <h3>Reading the data</h3>
 <ul><li>Stages reflect the latest reports available. Announced projects that later vanish from the news are shown as announced, not failed.</li>
 <li>Amounts and jobs are as stated in the reports, often targets, and are not converted or deflated.</li>
 <li>Some buyers are never named (for example Chinese purchases of marble quarries); they are kept as unnamed projects.</li></ul>`;
-$('#built').textContent=`Data release built ${meta.built_utc.slice(0,10)} · Source: Dünya Gazetesi`;
+$('#built').textContent=`Data release built ${meta.built_utc.slice(0,10)} · Sources: Dünya, Aydınlık and other news reports`;
 
 /* ---------- render ---------- */
 function render(){

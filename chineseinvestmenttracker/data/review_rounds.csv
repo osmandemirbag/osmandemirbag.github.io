@@ -1,0 +1,12 @@
+﻿round,description,articles_read,flagged_positive,flagged_uncertain,not_relevant
+1,Ranker top band (iteration 1),600,66,32,502
+2,Ranker band (iteration 2),322,69,33,220
+3,Ranker band (iteration 3),275,30,25,220
+4,Random audit + ranker band,359,9,18,332
+5,Strong-pattern sentence net,1650,13,18,1619
+6,Headline firm/China scan,687,2,2,683
+7,Hidden-brand dictionary scan,10,4,6,0
+8,Residual ranker band ≥0.10 after retraining,257,2,9,246
+9,Random audit of 0.02–0.10 band,200,0,0,200
+10,Route C semantic kNN neighbours of confirmed cases (whole archive),700,0,5,695
+11,Full headline screen of residual 0.05–0.10 band (44 opened),629,0,0,629

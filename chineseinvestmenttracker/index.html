@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chinese Investment Tracker – Turkey</title>
+<meta name="description" content="Project-level database of Chinese (PRC, Hong Kong and Chinese-owned foreign brands) investment in Turkey, built from the Dünya newspaper archive 2008–2022 with sentence-level evidence.">
+<style>
+:root{--bg:#f7f6f2;--panel:#ffffff;--ink:#1d1d1b;--muted:#6b6a64;--line:#e4e1d8;--accent:#b3261e;--accent2:#1f4e79;--chip:#f0eee7;
+--g-real:#1b7f4b;--g-agr:#2f6db5;--g-int:#c08a00;--g-fail:#8a8a8a;--g-rum:#a34fb0;--g-con:#5b5b5b;--g-pres:#0f8a8a;--map0:#efece4;--shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.04)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141413;--panel:#1d1d1b;--ink:#eceae4;--muted:#a3a19a;--line:#33322e;--accent:#e2564c;--accent2:#7fb0e0;--chip:#2a2926;--map0:#2a2926;--shadow:none}}
+:root[data-theme="dark"]{--bg:#141413;--panel:#1d1d1b;--ink:#eceae4;--muted:#a3a19a;--line:#33322e;--accent:#e2564c;--accent2:#7fb0e0;--chip:#2a2926;--map0:#2a2926;--shadow:none}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--accent2)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+header{padding:28px 0 8px}
+h1{font-size:28px;line-height:1.15;margin:0 0 6px;letter-spacing:-.01em}
+.sub{color:var(--muted);max-width:820px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:18px 0}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+.kpi b{display:block;font-size:24px;line-height:1.1}.kpi span{color:var(--muted);font-size:12.5px}
+nav.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-top:6px;overflow-x:auto}
+nav.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:10px 12px;font:inherit;color:var(--muted);cursor:pointer;white-space:nowrap}
+nav.tabs button.on{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--shadow)}
+.controls{display:grid;grid-template-columns:1.4fr 1fr;gap:12px;margin:14px 0}
+@media(max-width:860px){.controls{grid-template-columns:1fr}}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+label.sm{font-size:12.5px;color:var(--muted)}
+select,input[type=search]{font:inherit;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px;max-width:100%}
+input[type=search]{min-width:200px;flex:1}
+.yr{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.yr output{font-weight:700;font-variant-numeric:tabular-nums;min-width:96px}
+input[type=range]{flex:1;min-width:140px;accent-color:var(--accent)}
+.btn{font:inherit;font-size:13px;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:5px 10px;cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:3px 10px;cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:6px}
+.chip.off{opacity:.45}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:12px}
+@media(max-width:960px){.grid2{grid-template-columns:1fr}}
+#map svg{width:100%;height:auto;display:block}
+#map path{stroke:var(--panel);stroke-width:.6;cursor:pointer;transition:opacity .15s}
+#map path:hover{opacity:.75}
+.legend{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--muted);margin-top:6px;flex-wrap:wrap}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;padding:6px 8px;border-radius:6px;opacity:0;transition:opacity .1s;z-index:50;max-width:260px}
+#bars svg{width:100%;height:auto;display:block}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin:12px 0 30px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+.card:hover{border-color:var(--muted)}
+.card h3{font-size:15.5px;margin:0;line-height:1.3}
+.meta{font-size:12.5px;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;border-radius:6px;padding:2px 7px;color:#fff;white-space:nowrap}
+.tag{font-size:11.5px;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--muted);white-space:nowrap}
+.tag.hk{border-color:#b67b1b;color:#b67b1b}.tag.hid{border-color:var(--accent);color:var(--accent)}
+.counts{font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+.sortbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.empty{color:var(--muted);padding:20px;text-align:center}
+/* drawer */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+.ov.on{opacity:1;pointer-events:auto}
+aside.drawer{position:fixed;top:0;right:0;height:100%;width:min(760px,100%);background:var(--bg);border-left:1px solid var(--line);transform:translateX(100%);transition:transform .25s;z-index:45;overflow-y:auto}
+aside.drawer.on{transform:none}
+.dhead{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);padding:14px 16px;z-index:2}
+.dhead h2{margin:0 0 4px;font-size:20px;line-height:1.25}
+.dbody{padding:14px 16px 40px}
+.close{float:right;font-size:20px;background:none;border:0;color:var(--ink);cursor:pointer}
+dl.facts{display:grid;grid-template-columns:150px 1fr;gap:4px 12px;margin:10px 0 14px;font-size:13.5px}
+dl.facts dt{color:var(--muted)}dl.facts dd{margin:0}
+.ev{border-left:3px solid var(--line);padding:6px 0 10px 12px;margin-left:4px}
+.ev.Y{border-left-color:var(--accent)}.ev.M{border-left-color:var(--accent2)}.ev.C{border-left-color:var(--g-pres)}.ev.E{border-left-color:var(--g-con)}
+.ev .h{font-size:13px;color:var(--muted)}
+.ev blockquote{margin:6px 0;padding:8px 10px;background:var(--panel);border:1px solid var(--line);border-radius:8px;font-size:13.5px}
+.ev .kind{font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.ev.Y .kind{color:var(--accent)}.ev.M .kind{color:var(--accent2)}.ev.C .kind{color:var(--g-pres)}.ev.E .kind{color:var(--g-con)}
+.secth{font-size:13px;font-weight:700;margin:18px 0 6px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+table.t{border-collapse:collapse;width:100%;font-size:13px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+table.t th{color:var(--muted);font-weight:600}
+.method p,.method li{max-width:900px}
+.note{font-size:12.5px;color:var(--muted)}
+footer{color:var(--muted);font-size:12.5px;padding:30px 0}
+.hidden{display:none!important}
+.toggle-theme{float:right}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <button class="btn toggle-theme" id="themeBtn" title="Toggle light/dark">Light / dark</button>
+  <h1>Chinese Investment Tracker – Turkey</h1>
+  <div class="sub">Project dossiers of investment by mainland Chinese, Hong Kong and Chinese-owned foreign companies in Turkey, reconstructed from the Dünya newspaper archive (<span id="span"></span>). Every project is backed by quoted sentences from the articles. Investment evidence is kept separate from company news, contractor work and general statements.</div>
+  <div class="kpis" id="kpis"></div>
+  <nav class="tabs" id="tabs">
+    <button data-t="projects" class="on">Investment projects</button>
+    <button data-t="excluded">Contractor / non-equity</button>
+    <button data-t="signals">General signals</button>
+    <button data-t="method">Method & recall audit</button>
+  </nav>
+</header>
+
+<section id="tab-projects">
+  <div class="controls">
+    <div class="panel">
+      <div class="yr"><label class="sm">Time window</label>
+        <input type="range" id="y0" min="2008" max="2022" step="1" value="2008">
+        <input type="range" id="y1" min="2008" max="2022" step="1" value="2022">
+        <output id="yout"></output>
+        <button class="btn" id="play" title="Animate year by year">▶ Play</button>
+      </div>
+      <div class="note" style="margin-top:4px">A project is shown when it has at least one dated investment-evidence or mention item inside the window.</div>
+    </div>
+    <div class="panel">
+      <div class="row">
+        <input type="search" id="q" placeholder="Search firm, project, province…">
+        <select id="sector"><option value="">All sectors</option></select>
+        <select id="origin"><option value="">All origins</option><option value="CN">Mainland China</option><option value="HK">Hong Kong</option><option value="hidden">Chinese-owned foreign brand</option></select>
+      </div>
+    </div>
+  </div>
+  <div class="panel" style="margin-bottom:12px"><div class="row" style="justify-content:space-between"><div class="chips" id="sg"></div><button class="btn" id="reset">Reset filters</button></div></div>
+  <div class="grid2">
+    <div class="panel"><div class="row" style="justify-content:space-between"><b>Where</b><span class="note" id="provsel"></span></div><div id="map"></div><div class="legend" id="mapleg"></div><div class="note">Projects without a stated province (e.g. nationwide, unspecified site) are listed but not mapped.</div></div>
+    <div class="panel"><b>When</b><div class="note">Investment-evidence articles per year, coloured by the project's status</div><div id="bars"></div><div class="legend" id="barleg"></div></div>
+  </div>
+  <div class="sortbar"><div><b id="nshown"></b> <span class="meta">projects match</span></div>
+    <div class="row"><label class="sm">Sort</label><select id="sort"><option value="recent">Latest activity</option><option value="first">First evidence (oldest)</option><option value="evidence">Most evidence</option><option value="amount">Largest stated amount (USD)</option><option value="name">Name</option></select></div></div>
+  <div class="list" id="list"></div>
+</section>
+
+<section id="tab-excluded" class="hidden">
+  <div class="panel" style="margin:14px 0"><p style="margin:0">These items involve Chinese companies but are <b>not counted as Chinese investment</b>: EPC/contractor deals, Chinese-financed construction, technology transfer, licensing, distribution or reseller partnerships, and hotel management contracts. They are kept for transparency so nothing is silently dropped.</p></div>
+  <div class="list" id="exlist"></div>
+</section>
+
+<section id="tab-signals" class="hidden">
+  <div class="panel" style="margin:14px 0"><p style="margin:0">Statements about Chinese interest in Turkey that name no specific project: delegations, forums, ministerial remarks, MoUs between governments. They are useful context but are not investment evidence.</p></div>
+  <div class="panel"><table class="t" id="sigt"><thead><tr><th>Date</th><th>Who</th><th>Evidence</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section id="tab-method" class="hidden method">
+  <div class="panel" style="margin:14px 0" id="methodbody"></div>
+</section>
+
+<footer>Built by Osman Demirbağ. Source: Dünya Gazetesi archive. Quotes are short excerpts used as evidence, with links to the original articles. Data downloads: <a href="data/projects.csv">projects.csv</a> · <a href="data/claims.csv">claims.csv</a> · <a href="data/articles_reviewed.csv">articles_reviewed.csv</a> · <a href="data/run_metadata.json">run_metadata.json</a></footer>
+</div>
+
+<div class="ov" id="ov"></div>
+<aside class="drawer" id="drawer" aria-hidden="true"><div class="dhead"><button class="close" id="dclose" aria-label="Close">✕</button><h2 id="dtitle"></h2><div id="dsub" class="meta"></div></div><div class="dbody" id="dbody"></div></aside>
+<div class="tip" id="tip"></div>
+
+<script src="turkey_map_svg.js"></script>
+<script src="data.js"></script>
+<script>
+(function(){
+const D=window.TRACKER_DATA, M=window.TURKEY_MAP_SVG;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// theme
+try{const t=localStorage.getItem('cit-theme'); if(t) document.documentElement.dataset.theme=t;}catch(e){}
+$('#themeBtn').onclick=()=>{const cur=document.documentElement.dataset.theme|| (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');const n=cur==='dark'?'light':'dark';document.documentElement.dataset.theme=n;try{localStorage.setItem('cit-theme',n)}catch(e){}};
+const SG=[['Realised / under way','--g-real'],['Agreed / announced','--g-agr'],['Interest / talks / bid','--g-int'],['Rumour / reported talks','--g-rum'],['Failed / lost / exited','--g-fail']];
+const EXG=['Contractor / finance only','Presence / partnership (non-equity)'];
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const sgColor=g=>{const f=SG.find(x=>x[0]===g);return f?css(f[1]):(g===EXG[0]?css('--g-con'):css('--g-pres'))};
+const meta=D.meta;
+$('#span').textContent=`${meta.corpus_first.slice(0,4)}–${meta.corpus_last.slice(0,7)}, ${meta.corpus_articles.toLocaleString()} articles`;
+// index events by project
+const EV={};D.events.forEach(e=>{(EV[e.p]=EV[e.p]||[]).push(e)});
+const P=D.projects.map(p=>({...p,ev:(EV[p.k]||[]),usd:(()=>{const m=(p.amt||'').match(/([\d,.]+)m USD/);return m?+m[1].replace(/,/g,''):0})()}));
+const INV=P.filter(p=>!EXG.includes(p.sg)&&p.ne>0), EXC=P.filter(p=>EXG.includes(p.sg)||p.ne===0);
+// KPIs
+const realised=INV.filter(p=>p.sg==='Realised / under way').length;
+const k=[[INV.length,'projects with investment evidence'],[realised,'realised or under way'],[meta.articles_with_investment_evidence,'articles with investment evidence'],[INV.filter(p=>p.o.includes('hidden')).length,'via Chinese-owned foreign brands'],[INV.filter(p=>p.o.includes('HK')).length,'Hong Kong investors'],[meta.reviewed_articles.toLocaleString(),'articles read & labelled']];
+$('#kpis').innerHTML=k.map(x=>`<div class="kpi"><b>${x[0]}</b><span>${x[1]}</span></div>`).join('');
+// filters
+const sectors=[...new Set(INV.map(p=>p.s.split(/[(/–]/)[0].trim()))].sort();
+$('#sector').innerHTML+=sectors.map(s=>`<option>${esc(s)}</option>`).join('');
+let st={y0:2008,y1:2022,q:'',sector:'',origin:'',groups:new Set(SG.map(x=>x[0])),prov:'',sort:'recent'};
+$('#sg').innerHTML=SG.map(([g,c])=>`<span class="chip" data-g="${g}"><span class="dot" style="background:var(${c})"></span>${g} <span class="meta" data-n="${g}"></span></span>`).join('');
+document.querySelectorAll('#sg .chip').forEach(ch=>ch.onclick=()=>{const g=ch.dataset.g;if(st.groups.has(g))st.groups.delete(g);else st.groups.add(g);ch.classList.toggle('off');render()});
+const yr=()=>{let a=+$('#y0').value,b=+$('#y1').value;if(a>b){[a,b]=[b,a]}st.y0=a;st.y1=b;$('#yout').textContent=a===b?a:`${a} – ${b}`};
+['#y0','#y1'].forEach(s=>$(s).oninput=()=>{yr();render()});
+$('#q').oninput=e=>{st.q=e.target.value.toLowerCase();render()};
+$('#sector').onchange=e=>{st.sector=e.target.value;render()};
+$('#origin').onchange=e=>{st.origin=e.target.value;render()};
+$('#sort').onchange=e=>{st.sort=e.target.value;render()};
+$('#reset').onclick=()=>{st={...st,y0:2008,y1:2022,q:'',sector:'',origin:'',prov:'',groups:new Set(SG.map(x=>x[0]))};$('#y0').value=2008;$('#y1').value=2022;$('#q').value='';$('#sector').value='';$('#origin').value='';document.querySelectorAll('#sg .chip').forEach(c=>c.classList.remove('off'));yr();render()};
+let timer=null;$('#play').onclick=()=>{if(timer){clearInterval(timer);timer=null;$('#play').textContent='▶ Play';return}let y=2008;$('#y0').value=2008;$('#play').textContent='■ Stop';timer=setInterval(()=>{$('#y1').value=y;yr();render();y++;if(y>2022){clearInterval(timer);timer=null;$('#play').textContent='▶ Play'}},700)};
+const inWin=p=>p.ev.some(e=>(e.t==='Y'||e.t==='M')&&+e.d.slice(0,4)>=st.y0&&+e.d.slice(0,4)<=st.y1);
+function base(){return INV.filter(p=>inWin(p)&&(!st.sector||p.s.startsWith(st.sector))&&(!st.origin||(st.origin==='hidden'?p.o.includes('hidden'):st.origin==='HK'?p.o.includes('HK'):p.o.split(/;\s*/).includes('CN')))&&(!st.q||(p.name+' '+p.inv+' '+p.s+' '+p.prov.join(' ')+' '+p.sum).toLowerCase().includes(st.q)))}
+// map
+const NS='http://www.w3.org/2000/svg';
+const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox',M.viewBox);
+const paths={};M.provinces.forEach(pr=>{const p=document.createElementNS(NS,'path');p.setAttribute('d',pr.d);p.dataset.name=pr.name;svg.appendChild(p);paths[pr.name]=p;
+p.onmousemove=e=>{const n=p.dataset.n||0;showTip(e,`<b>${pr.name}</b><br>${n} project${n==1?'':'s'}${p.dataset.list?'<br>'+p.dataset.list:''}`)};p.onmouseleave=hideTip;
+p.onclick=()=>{st.prov=st.prov===pr.name?'':pr.name;render()}});
+$('#map').appendChild(svg);
+const tip=$('#tip');function showTip(e,h){tip.innerHTML=h;tip.style.left=Math.min(e.clientX+12,innerWidth-270)+'px';tip.style.top=(e.clientY+12)+'px';tip.style.opacity=1}function hideTip(){tip.style.opacity=0}
+function shade(n,max){if(!n)return css('--map0');const t=Math.sqrt(n/max);const a=[245,214,196],b=[150,24,18];return `rgb(${a.map((v,i)=>Math.round(v+(b[i]-v)*t)).join(',')})`}
+// bars
+function bars(list){const yrs=[];for(let y=2008;y<=2022;y++)yrs.push(y);const W=600,H=220,pl=28,pb=22,bw=(W-pl-6)/yrs.length;
+const data=yrs.map(y=>{const o={};SG.forEach(([g])=>o[g]=0);list.forEach(p=>p.ev.forEach(e=>{if(e.t==='Y'&&+e.d.slice(0,4)===y)o[p.sg]=(o[p.sg]||0)+1}));return o});
+const max=Math.max(1,...data.map(o=>Object.values(o).reduce((a,b)=>a+b,0)));let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evidence per year">`;
+for(let t=0;t<=4;t++){const v=Math.round(max*t/4),yy=H-pb-(H-pb-10)*t/4;s+=`<line x1="${pl}" x2="${W}" y1="${yy}" y2="${yy}" stroke="${css('--line')}"/><text x="${pl-4}" y="${yy+3}" font-size="9" text-anchor="end" fill="${css('--muted')}">${v}</text>`}
+yrs.forEach((y,i)=>{let acc=0;const x=pl+i*bw+2;SG.forEach(([g,c])=>{const v=data[i][g]||0;if(!v)return;const h=(H-pb-10)*v/max;s+=`<rect x="${x}" y="${H-pb-acc-h}" width="${bw-4}" height="${h}" fill="${css(c)}"><title>${y}: ${v} × ${g}</title></rect>`;acc+=h});
+const on=y>=st.y0&&y<=st.y1;s+=`<text x="${x+(bw-4)/2}" y="${H-6}" font-size="9" text-anchor="middle" fill="${on?css('--ink'):css('--muted')}" font-weight="${on?700:400}">${String(y).slice(2)}</text>`});
+$('#bars').innerHTML=s+'</svg>';$('#barleg').innerHTML=SG.map(([g,c])=>`<span><span class="dot" style="background:var(${c})"></span> ${g}</span>`).join('')}
+// cards
+function badge(g){return `<span class="badge" style="background:${sgColor(g)}">${esc(g)}</span>`}
+function tags(p){let t='';if(p.o.includes('hidden'))t+='<span class="tag hid">Chinese-owned foreign brand</span>';if(p.o.includes('HK'))t+='<span class="tag hk">Hong Kong</span>';return t}
+function card(p){return `<div class="card" data-k="${p.k}"><div class="row" style="justify-content:space-between;gap:6px">${badge(p.sg)}<span class="meta">${p.fe?p.fe.slice(0,4):p.f.slice(0,4)}${p.l&&p.l.slice(0,4)!==(p.fe||p.f).slice(0,4)?'–'+p.l.slice(0,4):''}</span></div><h3>${esc(p.name)}</h3><div class="meta">${esc(p.inv)}</div><div class="row" style="gap:6px"><span class="tag">${esc(p.s)}</span>${p.prov.length?`<span class="tag">📍 ${esc(p.prov.join(', '))}</span>`:''}${tags(p)}</div><div class="meta">${esc(p.st)}${p.amt?' · '+esc(p.amt):''}</div><div class="counts"><span><b style="color:var(--accent)">${p.ne}</b> evidence</span><span>${p.nm} mentions</span>${p.nc?`<span>${p.nc} company news</span>`:''}</div></div>`}
+function render(){const L0=base();const counts={};SG.forEach(([g])=>counts[g]=L0.filter(p=>p.sg===g).length);document.querySelectorAll('#sg [data-n]').forEach(s=>s.textContent=`(${counts[s.dataset.n]})`);
+let L=L0.filter(p=>st.groups.has(p.sg));
+// map counts use L (before province filter)
+const pc={},pl={};L.forEach(p=>p.prov.forEach(v=>{pc[v]=(pc[v]||0)+1;(pl[v]=pl[v]||[]).push(p.name)}));const max=Math.max(1,...Object.values(pc));
+Object.entries(paths).forEach(([n,el])=>{el.style.fill=shade(pc[n]||0,max);el.dataset.n=pc[n]||0;el.dataset.list=(pl[n]||[]).slice(0,6).map(esc).join('<br>')+((pl[n]||[]).length>6?'<br>…':'');el.style.stroke=st.prov===n?css('--ink'):'';el.style.strokeWidth=st.prov===n?'1.6':''});
+$('#mapleg').innerHTML=`<span>0</span>${[1,.75,.5,.25].reverse().map(f=>`<span class="dot" style="background:${shade(Math.max(1,Math.round(max*f)),max)};border-radius:2px;width:16px"></span>`).join('')}<span>${max} projects</span>`;
+$('#provsel').innerHTML=st.prov?`Filtered to <b>${esc(st.prov)}</b> · <a href="#" id="clrp">clear</a>`:'Click a province to filter';if(st.prov)$('#clrp').onclick=e=>{e.preventDefault();st.prov='';render()};
+if(st.prov)L=L.filter(p=>p.prov.includes(st.prov));
+bars(L);
+const srt={recent:(a,b)=>b.l.localeCompare(a.l),first:(a,b)=>(a.fe||a.f).localeCompare(b.fe||b.f),evidence:(a,b)=>b.ne-a.ne||b.nm-a.nm,amount:(a,b)=>b.usd-a.usd,name:(a,b)=>a.name.localeCompare(b.name)}[st.sort];
+L.sort(srt);$('#nshown').textContent=L.length;$('#list').innerHTML=L.length?L.map(card).join(''):'<div class="empty">No projects match these filters.</div>';
+document.querySelectorAll('#list .card').forEach(c=>c.onclick=()=>open(c.dataset.k))}
+// drawer
+const KIND={Y:'Investment evidence',M:'Context mention',C:'Company news – not an investment event',E:'Contractor / finance – not equity'};
+function evHTML(e){return `<div class="ev ${e.t}"><div class="kind">${KIND[e.t]} · ${esc(e.e)}</div><div class="h">${e.d} · <a href="${esc(e.u)}" target="_blank" rel="noopener">${esc(e.h)}</a></div><blockquote>“${esc(e.q)}”</blockquote>${[e.f&&('Firm: '+esc(e.f)),e.a&&('Amount: '+esc(e.a)),e.j&&('Jobs: '+esc(e.j)),e.c&&('Capacity: '+esc(e.c)),e.n&&('Note: '+esc(e.n))].filter(Boolean).map(x=>`<div class="meta">${x}</div>`).join('')}</div>`}
+function open(key){const p=P.find(x=>x.k===key);if(!p)return;$('#dtitle').textContent=p.name;$('#dsub').innerHTML=`${badge(p.sg)} ${tags(p)}`;
+const ys=p.ev.filter(e=>e.t==='Y'),ms=p.ev.filter(e=>e.t==='M'),cs=p.ev.filter(e=>e.t==='C'||e.t==='E');
+$('#dbody').innerHTML=`<p>${esc(p.sum)}</p><dl class="facts"><dt>Investor</dt><dd>${esc(p.inv)} <span class="meta">(${esc(p.o)})</span></dd><dt>Sector</dt><dd>${esc(p.s)}</dd><dt>Location</dt><dd>${esc(p.prov.join(', ')||'not stated')}</dd><dt>Type</dt><dd>${esc(p.it||'—')}</dd><dt>Status in archive</dt><dd>${esc(p.st)}</dd><dt>Largest stated amount</dt><dd>${esc(p.amt||'—')}</dd>${p.jobs?`<dt>Jobs (claimed)</dt><dd>${esc(p.jobs)}</dd>`:''}<dt>Coverage</dt><dd>${p.f} → ${p.l}</dd><dt>Project key</dt><dd class="meta">${p.k}</dd></dl>
+<div class="secth">Investment evidence (${ys.length})</div>${ys.map(evHTML).join('')||'<div class="meta">None — see mentions below.</div>'}
+${ms.length?`<div class="secth">Context mentions (${ms.length})</div><div class="note">Repeats, passing references and duplicate wire copies about the same project.</div>${ms.map(evHTML).join('')}`:''}
+${cs.length?`<div class="secth">Company news / contractor items (${cs.length})</div><div class="note">Operations, hiring, product or contractor news about the same company. Shown for context; not counted as investment events.</div>${cs.map(evHTML).join('')}`:''}
+<p class="note">Amounts, jobs and capacities are as reported in each article and may be plans, not outcomes.</p>`;
+$('#drawer').classList.add('on');$('#ov').classList.add('on');$('#drawer').setAttribute('aria-hidden','false');$('#drawer').scrollTop=0;try{history.replaceState(null,'','#'+key)}catch(e){}}
+function closeD(){$('#drawer').classList.remove('on');$('#ov').classList.remove('on');$('#drawer').setAttribute('aria-hidden','true');try{history.replaceState(null,'',location.pathname)}catch(e){}}
+$('#dclose').onclick=closeD;$('#ov').onclick=closeD;addEventListener('keydown',e=>{if(e.key==='Escape')closeD()});
+// excluded + signals
+$('#exlist').innerHTML=EXC.sort((a,b)=>(a.fe||a.f).localeCompare(b.fe||b.f)).map(card).join('');document.querySelectorAll('#exlist .card').forEach(c=>c.onclick=()=>open(c.dataset.k));
+$('#sigt tbody').innerHTML=D.general.slice().reverse().map(g=>`<tr><td style="white-space:nowrap">${g.d}</td><td>${esc(g.f)}</td><td><a href="${esc(g.u)}" target="_blank" rel="noopener">${esc(g.h)}</a><div class="meta">“${esc(g.q)}”</div></td></tr>`).join('');
+// method
+const rb=D.rounds.map(r=>`<tr><td>${r.round}</td><td>${esc(r.description||'')}</td><td>${(r.Y||0)+(r.U||0)+(r.N||0)}</td><td>${r.Y||0}</td><td>${r.U||0}</td></tr>`).join('');
+const ub=meta.unlabeled_bands.map(b=>`<tr><td>${b.band}</td><td>${b.unlabeled.toLocaleString()}</td></tr>`).join('');
+const cb=Object.entries(meta.claims_by_type).map(([k,v])=>`${k.replace(/_/g,' ')}: ${v}`).join(' · ');
+$('#methodbody').innerHTML=`<h2 style="margin-top:0">How this was built</h2>
+<p><b>Source.</b> ${meta.corpus_articles.toLocaleString()} Dünya Gazetesi articles, ${meta.corpus_first} to ${meta.corpus_last}. The archive ends in mid-2022, so later projects (for example BYD's 2024 plant) are outside its scope.</p>
+<p><b>Scope.</b> Investment in Turkey by mainland Chinese firms, Hong Kong firms, and foreign brands owned by Chinese groups at the time of the article (e.g. Pirelli/Prometeon under ChemChina, Riot Games under Tencent, Salcomp under Luxshare). Taiwanese investors are excluded. EPC contracts, Chinese loans, trade deals, licensing and hotel management contracts are recorded separately and not counted as investment.</p>
+<h3>Finding candidates (recall first)</h3><ol>
+<li><b>China-signal universe</b>: every article with a China/Hong Kong term, a Chinese place name or one of ${'~290'} Chinese firm names and aliases (including hidden owners) — ${meta.signal_universe.toLocaleString()} articles.</li>
+<li><b>Ranker</b>: a TF-IDF (word + character n-gram) logistic-regression model trained on the review labels ranks that universe. Every article scoring above 0.10 was read; every headline in the 0.05–0.10 band was screened and the plausible ones opened. 5-fold cross-validated average precision ≈ 0.72; at a 0.05 threshold it recovers ≈96% of known positives.</li>
+<li><b>Sentence-level net</b>: any sentence combining a Chinese entity, a Turkish place and an investment cue (1,650 articles) — read in full regardless of score.</li>
+<li><b>Headline scan</b>: every headline mentioning a Chinese firm, "Çinli", "Hong Kong" etc. (687 unlabelled ones read).</li>
+<li><b>Hidden-owner scan</b>: firm names discovered during review (31 added to the dictionary) were re-searched across the whole archive, including articles with no China wording.</li>
+<li><b>Semantic search</b>: every article in the archive (not only the China-signal universe) was embedded with a free multilingual sentence model (paraphrase-multilingual-MiniLM-L12-v2) and compared with the confirmed investment articles; ${meta.routeC?`the ${meta.routeC.reviewed} closest unlabelled articles (similarity ≥ ${meta.routeC.min_sim}) were read: ${meta.routeC.new_positive} new investment articles, ${meta.routeC.new_context_items} extra context or company-news items for projects already in the database`:'the closest unlabelled neighbours were read'}. This catches articles that never say "Çin".</li></ol>
+<h3>Review and extraction</h3>
+<p>${meta.reviewed_articles.toLocaleString()} articles were read and labelled, and every positive or uncertain article was re-read for structured extraction: firm, origin, Turkish partner, sector, province/site, investment type, event type, amount, jobs, capacity and the exact evidence sentences, which are copied verbatim from the article by sentence index. Claims: ${cb}. Claims are grouped into ${meta.projects_total} project dossiers; duplicate wire stories become extra mentions, not extra projects.</p>
+<p class="note"><b>Who labelled.</b> Labels and extractions were produced by Claude (an AI model) reading the articles in a Cowork session. They are not a human gold standard. The pipeline also ships an optional local-LLM verifier script; it was not used because no GPU was available in the build environment.</p>
+<h3>Review rounds</h3><table class="t"><thead><tr><th>#</th><th>What was read</th><th>Articles</th><th>Positive</th><th>Uncertain</th></tr></thead><tbody>${rb}</tbody></table>
+<h3>Recall audit</h3>
+<p>Random samples of low-scoring articles were read to estimate what might be missed: 300 from the low-score region in an earlier round and 200 from the 0.02–0.10 band after retraining. <b>None contained Chinese investment news.</b> By the rule of three, the miss rate in the 0.02–0.10 band is below about 1.5% (95% confidence), i.e. at most ~35 articles out of the remaining unlabelled band. These would mostly be passing mentions of projects already in the database. Remaining unlabelled articles by ranker score:</p>
+<table class="t" style="max-width:360px"><thead><tr><th>Score band</th><th>Unlabelled</th></tr></thead><tbody>${ub}</tbody></table>
+<h3>Earlier general classifier (Route A)</h3><p class="note">A classifier trained on the earlier 0/1 annotation (label 2 excluded; temporal, duplicate-aware split) reached ROC-AUC ${(+meta.routeA.roc_auc).toFixed(2)} and AP ${(+meta.routeA.ap).toFixed(2)}; at a threshold of ${(+meta.routeA.threshold).toFixed(3)} it kept every positive in the test split at ${(100*meta.routeA.precision).toFixed(0)}% precision. It was used only as one ranking signal; final decisions come from reading.</p>
+<h3>Known limitations</h3><ul>
+<li>Status reflects what the archive reports up to ${meta.corpus_last.slice(0,7)}; many announced projects simply disappear from the news, which is shown as "not realised in archive", not as failure.</li>
+<li>Amounts and jobs are as stated in the articles (often targets). They are not converted or deflated.</li>
+<li>Some buyers are never named (e.g. Chinese purchases of marble quarries). These are kept as unnamed projects.</li>
+<li>The Alibaba–Trendyol acquisition article of June 2018 is missing from the archive; the project relies on later references.</li></ul>
+<p class="note">Built ${meta.built_utc} UTC. Full tables: projects, claims, reviewed articles, firms, review rounds (CSV/Parquet/DuckDB) in the project repository.</p>`;
+// tabs
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));['projects','excluded','signals','method'].forEach(t=>$('#tab-'+t).classList.toggle('hidden',t!==b.dataset.t))});
+yr();render();
+if(location.hash.length>1){const k=decodeURIComponent(location.hash.slice(1));if(P.find(p=>p.k===k))open(k)}
+})();
+</script>
+</body>
+</html>

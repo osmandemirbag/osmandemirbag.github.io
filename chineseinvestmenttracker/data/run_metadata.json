@@ -1,29 +1,31 @@
 {
- "built_utc": "2026-10-01T10:29:47",
+ "built_utc": "2026-10-01T11:25:05",
  "corpus_articles": 278636,
  "corpus_first": "2008-02-01",
  "corpus_last": "2022-07-22",
  "signal_universe": 24400,
  "reviewed_articles": 5689,
  "articles_with_investment_evidence": 188,
- "claims_total": 351,
+ "claims_total": 358,
+ "external_news_events": 11,
  "claims_by_type": {
   "investment_evidence": 190,
   "context_mention": 82,
   "general_signal": 33,
   "company_news": 29,
-  "contractor_or_finance_only": 10,
+  "contractor_or_finance_only": 17,
+  "external_source_news": 11,
   "not_relevant": 7
  },
- "projects_total": 112,
+ "projects_total": 122,
  "projects_with_evidence": 97,
  "projects_by_status": {
   "Realised / under way": 35,
-  "Agreed / announced": 24,
+  "Agreed / announced": 25,
   "Interest / talks / bid": 21,
+  "Contractor / finance only": 17,
   "Failed / lost / exited": 10,
   "Presence / partnership (non-equity)": 8,
-  "Contractor / finance only": 8,
   "Rumour / reported talks": 6
  },
  "routeA": {

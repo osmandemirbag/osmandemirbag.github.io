@@ -158,6 +158,19 @@ table.cb{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
 .mt td,.mt th{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left}
 .mt th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
 .callout{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:14px 16px;margin:16px 0;font-size:14px}
+.xs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.xs .kpi .v{font-size:24px}
+.xfil{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.xfil input{height:36px;border:1px solid var(--line-2);border-radius:10px;background:var(--surface);padding:0 12px;flex:1 1 220px}
+.srcb{display:inline-block;font-size:11px;font-weight:650;padding:1px 6px;border-radius:5px;margin-right:6px;vertical-align:1px;border:1px solid var(--line-2);color:var(--ink-2)}
+.xt td{vertical-align:top}.xt .dup{font-size:12px;color:var(--muted);margin-top:3px}
+.plink{background:none;border:0;padding:0;color:var(--accent-ink);cursor:pointer;text-decoration:underline;font-size:13.5px;text-align:left}
+.via{font-size:11.5px;color:var(--muted)}
+.alsoin{margin:4px 0 16px;padding:12px 14px;border:1px solid var(--line);background:var(--surface);border-radius:10px;font-size:13.5px}
+.alsoin div{margin:4px 0}
+.ev.t-X::before{border-color:var(--s4)}
+.ev.t-X .sumx{margin:8px 0 6px;padding:10px 14px;background:var(--surface);border:1px dashed var(--line-2);border-radius:8px;font-size:14px}
+@media (max-width:640px){.xs{grid-template-columns:1fr}.xt td.hm,.xt th.hm{display:none}}
 footer{margin-top:60px;border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:13px}
 footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 /* drawer */
@@ -471,7 +484,7 @@ function drawTable(list){
     <td><div class="nm">${esc(p.name)}</div><div class="inv">${esc(p.inv)}${p.o!=='CN'?`<span class="tag">${p.o==='HK'?'Hong Kong':'Chinese-owned brand'}</span>`:''}</div></td>
     <td class="hm">${esc(p.bs)}<div class="inv">${esc(p.s)}</div></td><td class="hm">${esc(p.prov.join(', ')||'—')}</td>
     <td>${badge(p)}</td><td class="num" data-l="First evidence">${esc((p.fe||p.f||'').slice(0,7))}</td><td class="hm num amt">${esc(p.amt||'—')}</td>
-    <td class="num" data-l="Evidence articles" title="${p.ne} investment-evidence claims${p.nm+p.nc+p.nx?`, plus ${p.nm+p.nc+p.nx} mentions, company news or contractor items`:''}"><span class="evbar">${'<b></b>'.repeat(Math.min(p.ne,8))}</span>${p.ne}${p.nm+p.nc+p.nx?`<span class="inv"> +${p.nm+p.nc+p.nx}</span>`:''}</td></tr>`).join('');
+    <td class="num" data-l="Evidence articles" title="${p.ne} investment-evidence claims${p.nm+p.nc+p.nx?`, plus ${p.nm+p.nc+p.nx} mentions, company news or contractor items`:''}"><span class="evbar">${'<b></b>'.repeat(Math.min(p.ne,8))}</span>${p.ne}${p.nm+p.nc+p.nx?`<span class="inv"> +${p.nm+p.nc+p.nx}</span>`:''}${p.nw?`<span class="inv"> · web ${p.nw}</span>`:''}</td></tr>`).join('');
   $('#more').innerHTML=rows.length>st.limit?`<button class="btn" id="morebtn">Show all ${rows.length} projects</button>`:`<span class="inv" style="color:var(--muted);font-size:13px">${rows.length} project${rows.length>1?'s':''}</span>`;
   const mb=$('#morebtn');if(mb)mb.onclick=()=>{st.limit=1e9;drawTable(list)};
 }
@@ -480,9 +493,10 @@ $('#pt tbody').onclick=e=>{const tr=e.target.closest('tr[data-k]');if(tr)openP(t
 $('#pt tbody').onkeydown=e=>{if(e.key==='Enter'){const tr=e.target.closest('tr[data-k]');if(tr)openP(tr.dataset.k)}};
 
 /* ---------- drawer ---------- */
-const TL={Y:'Investment evidence',M:'Mention in passing',C:'Company news',E:'Contractor / finance'};
+const TL={Y:'Investment evidence',M:'Mention in passing',C:'Company news',E:'Contractor / finance',X:'Other source'};
 function evHtml(e){
   const bits=[e.f,e.a,e.j?e.j+' jobs':'',e.c].filter(Boolean).map(esc).join(' · ');
+  if(e.t==='X')return `<div class="ev t-X"><div class="when">${esc(e.d)}</div><div class="what">${esc(cap(e.e))}<span class="tag">Other news source</span></div>${bits?`<div class="src">${bits}</div>`:''}<div class="sumx">${esc(e.q)}</div><div class="src">${esc(e.h)} · <a href="${esc(e.u)}" target="_blank" rel="noopener">Article ↗</a></div>${e.n?`<div class="note">${esc(e.n)}</div>`:''}</div>`;
   return `<div class="ev t-${e.t}"><div class="when">${esc(e.d)}</div><div class="what">${esc(cap(e.e))}${e.t!=='Y'?`<span class="tag">${TL[e.t]}</span>`:''}</div>${bits?`<div class="src">${bits}</div>`:''}
   <blockquote lang="tr">${esc(e.q)}</blockquote><div class="src">${esc(e.h)} · <a href="${esc(e.u)}" target="_blank" rel="noopener">Dünya article ↗</a></div>${e.n?`<div class="note">${esc(e.n)}</div>`:''}</div>`}
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):'';
@@ -490,10 +504,11 @@ let lastFocus=null;
 function openP(k){
   const p=P.find(x=>x.k===k);if(!p)return;lastFocus=document.activeElement;
   const ev=(EV[k]||[]).slice().sort((a,b)=>a.d.localeCompare(b.d));
-  const groups=[['Y','Investment steps'],['M','Mentions'],['CE','Company news & contractor']].map(([t,l])=>({t,l,items:ev.filter(e=>t.includes(e.t))})).filter(g=>g.items.length);
+  const groups=[['Y','Investment steps'],['M','Mentions'],['CE','Company news & contractor'],['X','Other news sources']].map(([t,l])=>({t,l,items:ev.filter(e=>t.includes(e.t))})).filter(g=>g.items.length);
   $('#dh').innerHTML=`<button class="iconbtn x" id="close" aria-label="Close">✕ Close</button>${badge(p)}<h3>${esc(p.name)}</h3><div class="inv">${esc(p.inv)} · ${esc(ORIG[p.o]||p.o)}</div>`;
   const F=[['Sector',p.bs+' · '+p.s],['Province',p.prov.join(', ')||'—'],['Reported amount',p.amt||'—'],['Jobs reported',p.jobs||'—'],['First evidence',p.fe||'—'],['Last report',p.l||'—'],['Type',p.it||'—'],['Status',p.st||'—']];
   $('#db').innerHTML=`<p class="summary">${esc(p.sum)}</p><div class="facts">${F.map(f=>`<div class="fact"><div class="k">${f[0]}</div><div class="v">${esc(f[1])}</div></div>`).join('')}</div>
+
    <div class="tabs" role="tablist">${groups.map((g,i)=>`<button role="tab" aria-selected="${i===0}" data-i="${i}">${g.l} (${g.items.length})</button>`).join('')}</div>
    ${groups.map((g,i)=>`<div class="tl" data-g="${i}" ${i?'hidden':''}>${g.items.map(evHtml).join('')}</div>`).join('')||'<p class="inv">No quoted articles.</p>'}`;
   $('#db').querySelector('.tabs')&&($('#db').querySelector('.tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;$('#db').querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));$('#db').querySelectorAll('.tl').forEach(x=>x.hidden=x.dataset.g!==b.dataset.i)});

@@ -134,9 +134,9 @@ details.sig summary{cursor:pointer;font-weight:600;padding:12px 0}
 .siglist{display:grid;gap:10px}
 .sigitem{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13.5px}
 /* data */
-.dl{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.dl{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 .dlcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:6px}
-.dlcard.feature{grid-column:span 3;flex-direction:row;align-items:center;gap:18px;background:linear-gradient(120deg,var(--accent-wash),var(--surface) 70%)}
+.dlcard.feature{grid-column:span 2;flex-direction:row;align-items:center;gap:18px;background:linear-gradient(120deg,var(--accent-wash),var(--surface) 70%)}
 .dlcard h4{margin:0;font-size:15.5px}
 .dlcard p{margin:0;color:var(--ink-2);font-size:13.5px;flex:1}
 .dlcard .meta{font-size:12px;color:var(--muted)}
@@ -230,7 +230,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
   <div class="wrap">
     <a class="brand" href="#top"><span class="mark">中</span><span>China–Turkey Investment Tracker</span></a>
     <nav class="nav" aria-label="Sections">
-      <a href="#explore">Explore</a><a href="#projects">Projects</a><a href="#data">Data</a><a href="#method">Method</a>
+      <a href="#explore">Explore</a><a href="#projects">Projects</a><a href="#data">Data</a><a href="#about">About</a>
     </nav>
     <button class="iconbtn" id="theme" aria-label="Switch colour theme">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><span>Theme</span>
@@ -323,9 +323,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
     </div>
   </section>
 
-  <section class="block" id="method">
+  <section class="block" id="about">
     <div class="wrap">
-      <div class="sec-h"><h2>How the data were built</h2></div>
+      <div class="sec-h"><h2>About the data</h2></div>
       <div class="prose" id="methodbody"></div>
     </div>
   </section>
@@ -527,46 +527,21 @@ $('#siglist').innerHTML=D.general.map(g=>`<div class="sigitem"><div class="when"
 const kb=b=>b>1e6?(b/1e6).toFixed(1)+' MB':Math.round(b/1e3)+' KB';
 const DS=[
   ['projects','Projects','One row per project: investor, origin, sector, provinces, stage, reported amount and jobs, dates and evidence counts.'],
-  ['events','Evidence claims','One row per claim with the verbatim Turkish quote, event type, firm, amount, date and article link.'],
-  ['articles_reviewed','Articles reviewed','Every article that was read, with its final label and review round. Useful for checking coverage.'],
-  ['firms','Firm dictionary','Chinese firms, brands and aliases searched in the archive, including Chinese-owned foreign brands.'],
-  ['review_rounds','Review rounds','How articles were selected for reading, with counts per round.']
+  ['events','Evidence','One row per claim with the quote from the article, event type, firm, amount, date and article link.']
 ];
 const xl=FILES.xlsx?kb(FILES.xlsx.bytes):'';
-$('#dl').innerHTML=`<div class="dlcard feature"><div class="fileicon">XLSX</div><div style="flex:1"><h4>Complete dataset (Excel)</h4><p>All five tables as sheets, plus a README and the codebook.</p><div class="meta">${xl}</div></div><a class="btn primary" href="data/china_turkey_investment_tracker.xlsx" download>Download .xlsx</a></div>`+
- DS.map(([f,t,d])=>{const m=FILES[f]||{};return `<div class="dlcard"><h4>${t}</h4><p>${d}</p><div class="meta">${m.rows!=null?fmt(m.rows)+' rows · ':''}${m.bytes?kb(m.bytes):''} · CSV, UTF-8</div><div class="row"><a class="btn" href="data/${f}.csv" download>Download CSV</a></div></div>`}).join('')+
- `<div class="dlcard"><h4>Run metadata</h4><p>Counts, model scores and recall-audit results for this release, as JSON.</p><div class="meta">JSON</div><div class="row"><a class="btn" href="data/run_metadata.json" download>Download JSON</a></div></div>`;
+$('#dl').innerHTML=`<div class="dlcard feature"><div class="fileicon">XLSX</div><div style="flex:1"><h4>Complete dataset (Excel)</h4><p>Projects and evidence as sheets, plus a README and the variable list.</p><div class="meta">${xl}</div></div><a class="btn primary" href="data/china_turkey_investment_tracker.xlsx" download>Download .xlsx</a></div>`+
+ DS.map(([f,t,d])=>{const m=FILES[f]||{};return `<div class="dlcard"><h4>${t}</h4><p>${d}</p><div class="meta">${m.rows!=null?fmt(m.rows)+' rows · ':''}${m.bytes?kb(m.bytes):''} · CSV, UTF-8</div><div class="row"><a class="btn" href="data/${f}.csv" download>Download CSV</a></div></div>`}).join('');
 $('#cb tbody').innerHTML=CB.map(r=>`<tr><td>${esc(r[0])}</td><td><code>${esc(r[1])}</code></td><td>${esc(r[2])}</td></tr>`).join('');
 
 /* ---------- method ---------- */
-const rb=D.rounds.map(r=>`<tr><td>${r.round}</td><td>${esc(r.description||'')}</td><td class="num">${fmt((r.N||0)+(r.U||0)+(r.Y||0))}</td><td class="num">${r.Y||0}</td><td class="num">${r.U||0}</td></tr>`).join('');
-const ub=meta.unlabeled_bands.map(b=>`<tr><td>${b.band}</td><td class="num">${fmt(b.unlabeled)}</td></tr>`).join('');
-const rc=meta.routeC||{};
 $('#methodbody').innerHTML=`
-<p><b>Source.</b> ${fmt(meta.corpus_articles)} articles from the business daily Dünya, ${meta.corpus_first} to ${meta.corpus_last}. Projects after mid-2022 (for example BYD's 2024 plant) fall outside the archive.</p>
-<p><b>Scope.</b> Investment in Turkey by mainland Chinese firms, Hong Kong firms and foreign brands owned by Chinese groups at the time (for example Pirelli/Prometeon under ChemChina, Riot Games under Tencent, Salcomp under Luxshare). Taiwanese investors are excluded. Construction contracts, Chinese loans, trade and hotel management deals are recorded separately and not counted as investment.</p>
-<h3>Finding the articles</h3>
-<p>The goal was to miss nothing, including small deals and articles that never say "Çin". Several searches were combined:</p>
-<ol class="steps">
-<li><b>China signal.</b> Every article naming China, Hong Kong, a Chinese place or one of ~290 Chinese firms, brands and aliases: ${fmt(meta.signal_universe)} articles.</li>
-<li><b>Relevance ranking.</b> A text classifier trained on the articles already read ranks that set; every article above 0.10 was read and every headline between 0.05 and 0.10 was checked.</li>
-<li><b>Sentence net.</b> Any sentence combining a Chinese entity, a Turkish place and an investment word was read, whatever its score.</li>
-<li><b>Hidden owners.</b> Chinese-owned brands found during reading were searched again across the whole archive.</li>
-<li><b>Semantic search.</b> All ${fmt(rc.embedded||meta.corpus_articles)} articles were compared with the confirmed cases using a multilingual sentence model; the ${fmt(rc.reviewed||0)} closest unread articles were read (${rc.new_positive||0} new investments, ${rc.new_context_items||0} extra mentions of known projects).</li>
-</ol>
-<h3>Coding</h3>
-<p>${fmt(meta.reviewed_articles)} articles were read. Each relevant article was coded for firm, origin, Turkish partner, sector, province, investment type, event, amount, jobs and capacity, and the supporting sentences were copied verbatim. Claims are grouped into ${meta.projects_total} projects; repeated wire stories add mentions, not projects. Each project's stage was assigned from its full timeline.</p>
-<div class="callout"><b>Who read the articles.</b> Reading and coding were carried out by an AI model (Claude) following the authors' protocol, and every claim links back to the source article so it can be checked. They are not hand-coded gold labels.</div>
-<h3>Review rounds</h3>
-<div class="cbwrap"><table class="mt"><thead><tr><th>#</th><th>What was read</th><th>Articles</th><th>Positive</th><th>Uncertain</th></tr></thead><tbody>${rb}</tbody></table></div>
-<h3>How much could be missing</h3>
-<p>Random samples of 500 low-scoring articles contained no Chinese investment news, which puts the miss rate in that range below about 1.5% (95% confidence). Unread articles remain only at low scores:</p>
-<table class="mt" style="max-width:340px"><thead><tr><th>Score band</th><th>Unread articles</th></tr></thead><tbody>${ub}</tbody></table>
-<h3>Limitations</h3>
-<ul><li>Stages reflect what the archive reports by ${meta.corpus_last.slice(0,7)}. Announced projects that later vanish from the news are shown as announced, not failed.</li>
-<li>Amounts and jobs are as stated in the articles, often targets, and are not converted or deflated.</li>
-<li>Some buyers are never named (for example Chinese purchases of marble quarries); they are kept as unnamed projects.</li>
-<li>The June 2018 Alibaba–Trendyol deal article is missing from the archive; that project relies on later reports.</li></ul>`;
+<p><b>Source.</b> Articles from the business daily Dünya, ${meta.corpus_first.slice(0,4)} to ${meta.corpus_last.slice(0,4)}, complemented by other news reports where Dünya is silent. Every claim links to the article it comes from.</p>
+<p><b>Scope.</b> Investment in Turkey by mainland Chinese firms, Hong Kong firms and foreign brands owned by Chinese groups (for example Pirelli under ChemChina, Riot Games under Tencent, Salcomp under Luxshare). Taiwanese investors are excluded. Construction contracts and Chinese loans are shown separately and not counted as investment.</p>
+<h3>Reading the data</h3>
+<ul><li>Stages reflect the latest reports available. Announced projects that later vanish from the news are shown as announced, not failed.</li>
+<li>Amounts and jobs are as stated in the reports, often targets, and are not converted or deflated.</li>
+<li>Some buyers are never named (for example Chinese purchases of marble quarries); they are kept as unnamed projects.</li></ul>`;
 $('#built').textContent=`Data release built ${meta.built_utc.slice(0,10)} · Source: Dünya Gazetesi`;
 
 /* ---------- render ---------- */

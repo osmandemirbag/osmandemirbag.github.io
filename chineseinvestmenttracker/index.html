@@ -266,6 +266,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
       <span class="yr"><label for="y0">From</label><select class="ctl" id="y0"></select><label for="y1">to</label><select class="ctl" id="y1"></select></span>
       <select class="ctl" id="fs" aria-label="Sector"></select>
       <select class="ctl" id="fo" aria-label="Origin"></select>
+      <select class="ctl" id="ff" aria-label="Form of investment"></select>
       <select class="ctl" id="fr" aria-label="Ownership route"></select>
       <div class="chips" id="chips" role="group" aria-label="Project stage"></div>
       <button class="linkbtn" id="reset">Reset</button>
@@ -344,8 +345,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 <aside class="drawer" id="drawer" aria-hidden="true" aria-label="Project details"><div class="dh" id="dh"></div><div class="db" id="db"></div></aside>
 <div class="tip" id="tip" role="tooltip"></div>
 
-<script src="turkey_map_svg.js?v=202610021556"></script>
-<script src="data.js?v=202610021556"></script>
+<script src="turkey_map_svg.js?v=202610021605"></script>
+<script src="data.js?v=202610021605"></script>
 <script>
 (function(){
 const D=window.TRACKER_DATA, M=window.TURKEY_MAP_SVG, FILES=window.TRACKER_FILES||{}, CB=window.TRACKER_CODEBOOK||[];
@@ -365,16 +366,16 @@ const BUCKETS=[
 ];
 const bucketOf=p=>BUCKETS.find(b=>b.sg.includes(p.sg))||BUCKETS[4];
 const ORIG={'CN':'Mainland China','HK':'Hong Kong','CN-hidden':'Chinese-owned foreign brand'};
-P.forEach(p=>{p.b=bucketOf(p).id;p.y0=yr(p.fe||p.f);p.y1=Math.max(yr(p.l)||p.y0,p.y0);p.rt=p.rt||[];p.search=[p.name,p.inv,p.s,p.bs,p.prov.join(' '),p.sum,p.k,p.rt.map(r=>'via '+r).join(' '),p.rh||''].join(' ').toLocaleLowerCase('tr')});
+P.forEach(p=>{p.b=bucketOf(p).id;p.y0=yr(p.fe||p.f);p.y1=Math.max(yr(p.l)||p.y0,p.y0);p.rt=p.rt||[];p.search=[p.name,p.inv,p.s,p.bs,p.prov.join(' '),p.sum,p.k,p.rt.map(r=>'via '+r).join(' '),p.rh||'',p.fm||''].join(' ').toLocaleLowerCase('tr')});
 const EV={};E.forEach(e=>(EV[e.p]=EV[e.p]||[]).push(e));
 const Y0=Math.min(+meta.corpus_first.slice(0,4),...P.map(p=>p.y0).filter(Boolean)), Y1=Math.max(+meta.corpus_last.slice(0,4),...P.map(p=>p.y1).filter(Boolean));
 $('#span').textContent=`${Y0}–${Y1}`;
 
 /* ---------- state ---------- */
-const st={q:'',y0:Y0,y1:Y1,sector:'',origin:'',route:'',prov:'',on:new Set(['realised','agreed','talks','failed']),sort:{k:'ne',dir:-1},limit:40};
+const st={q:'',y0:Y0,y1:Y1,sector:'',origin:'',form:'',route:'',prov:'',on:new Set(['realised','agreed','talks','failed']),sort:{k:'ne',dir:-1},limit:40};
 function filtered(ignoreProv){
   const q=st.q.toLocaleLowerCase('tr');
-  return P.filter(p=>st.on.has(p.b)&&p.y1>=st.y0&&p.y0<=st.y1&&(!st.sector||p.bs===st.sector)&&(!st.origin||p.o===st.origin)&&(!st.route||(st.route==='any'?p.rt.length>0:p.rt.includes(st.route)))&&(ignoreProv||!st.prov||p.prov.includes(st.prov))&&(!q||p.search.includes(q)));
+  return P.filter(p=>st.on.has(p.b)&&p.y1>=st.y0&&p.y0<=st.y1&&(!st.sector||p.bs===st.sector)&&(!st.origin||p.o===st.origin)&&(!st.form||p.fm===st.form)&&(!st.route||(st.route==='any'?p.rt.length>0:p.rt.includes(st.route)))&&(ignoreProv||!st.prov||p.prov.includes(st.prov))&&(!q||p.search.includes(q)));
 }
 
 /* ---------- controls ---------- */
@@ -383,6 +384,9 @@ $('#y0').value=Y0;$('#y1').value=Y1;
 const sectors=[...new Set(P.map(p=>p.bs))].sort();
 $('#fs').add(new Option('All sectors',''));sectors.forEach(s=>$('#fs').add(new Option(s,s)));
 $('#fo').add(new Option('All origins',''));Object.entries(ORIG).forEach(([k,v])=>$('#fo').add(new Option(v,k)));
+const FORMS=['New facility','Acquisition or stake','Sales or service office','Not specified'];
+$('#ff').add(new Option('All forms',''));FORMS.forEach(x=>$('#ff').add(new Option(x,x)));
+$('#ff').onchange=e=>{st.form=e.target.value;render()};
 const ROUTES=['Luxembourg','Singapore','Hong Kong','Netherlands'].filter(r=>P.some(p=>p.rt.includes(r)));
 $('#fr').add(new Option('Any route',''));$('#fr').add(new Option('Via a third country','any'));ROUTES.forEach(r=>$('#fr').add(new Option('Via '+r,r)));
 $('#chips').innerHTML=BUCKETS.map(b=>`<button class="chip" data-b="${b.id}" aria-pressed="${st.on.has(b.id)}" title="${b.note||''}"><span class="dot" style="background:var(${b.col})"></span>${b.label}</button>`).join('');
@@ -393,7 +397,7 @@ $('#y1').onchange=e=>{st.y1=+e.target.value;if(st.y1<st.y0){st.y0=st.y1;$('#y0')
 $('#fs').onchange=e=>{st.sector=e.target.value;render()};
 $('#fo').onchange=e=>{st.origin=e.target.value;render()};
 $('#fr').onchange=e=>{st.route=e.target.value;render()};
-$('#reset').onclick=()=>{Object.assign(st,{q:'',y0:Y0,y1:Y1,sector:'',origin:'',route:'',prov:'',limit:40});st.on=new Set(['realised','agreed','talks','failed']);$('#q').value='';$('#y0').value=Y0;$('#y1').value=Y1;$('#fs').value='';$('#fo').value='';$('#fr').value='';document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',st.on.has(c.dataset.b)));render()};
+$('#reset').onclick=()=>{Object.assign(st,{q:'',y0:Y0,y1:Y1,sector:'',origin:'',form:'',route:'',prov:'',limit:40});st.on=new Set(['realised','agreed','talks','failed']);$('#q').value='';$('#y0').value=Y0;$('#y1').value=Y1;$('#fs').value='';$('#fo').value='';$('#fr').value='';$('#ff').value='';document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',st.on.has(c.dataset.b)));render()};
 
 /* ---------- theme ---------- */
 const root=document.documentElement;
@@ -412,7 +416,7 @@ function kpis(list){
   const arts=new Set();list.forEach(p=>(EV[p.k]||[]).forEach(e=>{if(e.t==='Y')arts.add(e.u)}));
   const provs=new Set();list.forEach(p=>p.prov.forEach(x=>provs.add(x)));
   const firms=new Set(list.map(p=>p.inv));
-  const K=[[inv.length,'Investment projects','in current selection'],[inv.filter(p=>p.b==='realised').length,'Realised or under way','plants, stakes, offices…'],[arts.size,'Articles with evidence','quoted on each project'],[provs.size,'Provinces','with a reported site'],[firms.size,'Investors','Chinese & Hong Kong groups'],[inv.filter(p=>p.rt.length).length,'Held via third jurisdictions','Luxembourg, Singapore, Hong Kong…']];
+  const K=[[inv.length,'Investment projects','in current selection'],[inv.filter(p=>p.b==='realised').length,'Realised or under way',(r=>`${r.filter(p=>p.fm==='New facility').length} new facilities · ${r.filter(p=>p.fm==='Acquisition or stake').length} acquisitions · ${r.filter(p=>p.fm==='Sales or service office').length} offices`)(inv.filter(p=>p.b==='realised'))],[arts.size,'Articles with evidence','quoted on each project'],[provs.size,'Provinces','with a reported site'],[firms.size,'Investors','Chinese & Hong Kong groups'],[inv.filter(p=>p.rt.length).length,'Held via third jurisdictions','Luxembourg, Singapore, Hong Kong…']];
   $('#kpis').innerHTML=K.map(k=>`<div class="kpi"><div class="v">${fmt(k[0])}</div><div class="l">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
 }
 
@@ -488,7 +492,7 @@ function drawTable(list){
   tb.innerHTML=rows.slice(0,st.limit).map(p=>`<tr data-k="${esc(p.k)}" tabindex="0">
     <td><div class="nm">${esc(p.name)}</div><div class="inv">${esc(p.inv)}${p.o!=='CN'?`<span class="tag">${p.o==='HK'?'Hong Kong':'Chinese-owned brand'}</span>`:''}${p.rt.length?`<span class="tag via">via ${esc(p.rt.join(' & '))}</span>`:''}</div></td>
     <td class="hm">${esc(p.bs)}<div class="inv">${esc(p.s)}</div></td><td class="hm">${esc(p.prov.join(', ')||'—')}</td>
-    <td>${badge(p)}</td><td class="num" data-l="First evidence">${esc((p.fe||p.f||'').slice(0,7))}</td><td class="hm num amt">${esc(p.amt||'—')}</td>
+    <td>${badge(p)}<div class="inv">${esc(p.fm||'')}</div></td><td class="num" data-l="First evidence">${esc((p.fe||p.f||'').slice(0,7))}</td><td class="hm num amt">${esc(p.amt||'—')}</td>
     <td class="num" data-l="Evidence articles" title="${p.ne} investment-evidence claims${p.nm+p.nc+p.nx?`, plus ${p.nm+p.nc+p.nx} mentions, company news or contractor items`:''}"><span class="evbar">${'<b></b>'.repeat(Math.min(p.ne,8))}</span>${p.ne}${p.nm+p.nc+p.nx?`<span class="inv"> +${p.nm+p.nc+p.nx}</span>`:''}${p.nw?`<span class="inv"> · web ${p.nw}</span>`:''}</td></tr>`).join('');
   $('#more').innerHTML=rows.length>st.limit?`<button class="btn" id="morebtn">Show all ${rows.length} projects</button>`:`<span class="inv" style="color:var(--muted);font-size:13px">${rows.length} project${rows.length>1?'s':''}</span>`;
   const mb=$('#morebtn');if(mb)mb.onclick=()=>{st.limit=1e9;drawTable(list)};
@@ -512,7 +516,7 @@ function openP(k){
   const ev=(EV[k]||[]).slice().sort((a,b)=>a.d.localeCompare(b.d));
   const groups=[['Y','Investment steps'],['M','Mentions'],['CE','Company news & contractor'],['X','Other news sources']].map(([t,l])=>({t,l,items:ev.filter(e=>t.includes(e.t))})).filter(g=>g.items.length);
   $('#dh').innerHTML=`<button class="iconbtn x" id="close" aria-label="Close">✕ Close</button>${badge(p)}<h3>${esc(p.name)}</h3><div class="inv">${esc(p.inv)} · ${esc(ORIG[p.o]||p.o)}</div>`;
-  const F=[['Sector',p.bs+' · '+p.s],['Province',p.prov.join(', ')||'—'],['Reported amount',p.amt||'—'],['Jobs reported',p.jobs||'—'],['First evidence',p.fe||'—'],['Last report',p.l||'—'],['Type',p.it||'—'],['Status',p.st||'—']];
+  const F=[['Sector',p.bs+' · '+p.s],['Province',p.prov.join(', ')||'—'],['Reported amount',p.amt||'—'],['Jobs reported',p.jobs||'—'],['First evidence',p.fe||'—'],['Last report',p.l||'—'],['Form',p.fm||'—'],['Type',p.it||'—'],['Status',p.st||'—']];
   if(p.rt.length)F.push(['Held via',p.rt.join(', ')+(p.rh?' — '+p.rh:'')]);
   $('#db').innerHTML=`<p class="summary">${esc(p.sum)}</p><div class="facts">${F.map(f=>`<div class="fact"><div class="k">${f[0]}</div><div class="v">${esc(f[1])}</div></div>`).join('')}</div>
 
@@ -545,6 +549,7 @@ $('#cb tbody').innerHTML=CB.map(r=>`<tr><td>${esc(r[0])}</td><td><code>${esc(r[1
 $('#methodbody').innerHTML=`
 <p><b>Sources.</b> The dailies Dünya (2008–2022) and Aydınlık (2011–2023), complemented by other newspapers, trade press and company announcements for projects these papers do not cover. Every claim links to the article it comes from.</p>
 <p><b>Scope.</b> Investment in Turkey by mainland Chinese firms, Hong Kong firms and foreign brands owned by Chinese groups (for example Pirelli under ChemChina, Riot Games under Tencent, Salcomp under Luxshare). Taiwanese investors are excluded. Construction contracts and Chinese loans are shown separately and not counted as investment.</p>
+<p><b>Forms of investment.</b> Each project is tagged as a new facility (plant, mine, power plant, hotel, bank, R&D centre), an acquisition or equity stake, or a sales or service office. Offices are wholly owned companies and therefore direct investment, but they add no production capacity, so they are counted separately in the totals.</p>
 <p><b>Ownership routes.</b> Some investors hold their Turkish company through a holding in Luxembourg, Singapore, Hong Kong or the Netherlands, so official statistics record the investment under that country. Where trade-registry records show such a route, the project carries a “via” tag and can be filtered by route.</p>
 <h3>Reading the data</h3>
 <ul><li>Stages reflect the latest reports available. Announced projects that later vanish from the news are shown as announced, not failed.</li>

@@ -68,7 +68,7 @@ h1{font-size:clamp(32px,4.6vw,52px);line-height:1.06;letter-spacing:-.025em;marg
 .btn.primary{background:var(--ink);color:var(--page);border-color:var(--ink)}
 .btn.primary:hover{opacity:.9}
 /* kpis */
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:34px 0 8px}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:34px 0 8px}
 .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
 .kpi .v{font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
 .kpi .l{font-size:13px;color:var(--ink-2);margin-top:4px}
@@ -124,6 +124,7 @@ table.pt{width:100%;border-collapse:collapse;font-size:14px}
 .num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);white-space:nowrap;color:var(--ink)}
 .badge i{width:8px;height:8px;border-radius:50%}
+.tag.via{background:transparent;border:1px solid var(--line-2);color:var(--ink-2)}
 .tag{display:inline-block;font-size:11.5px;padding:1px 7px;border-radius:6px;background:var(--surface-3);color:var(--ink-2);margin-left:4px;vertical-align:1px}
 .evbar{display:inline-flex;gap:2px;vertical-align:middle;margin-right:6px}
 .evbar b{display:block;width:4px;height:12px;border-radius:2px;background:var(--accent)}
@@ -240,9 +241,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 
 <main id="top">
   <div class="wrap hero">
-    <div class="eyebrow">Research data · Dünya and Aydınlık archives · <span id="span"></span></div>
+    <div class="eyebrow">Research data · Turkish press reports · <span id="span"></span></div>
     <h1>Chinese investment in Turkey</h1>
-    <p class="lede">Every Chinese, Hong Kong and Chinese-owned investment project in Turkey reported in the Turkish press, from first rumour to plant opening or exit. Each project is backed by quotes from the original articles.</p>
+    <p class="lede">Every Chinese, Hong Kong and Chinese-owned investment project in Turkey reported in the press, from first rumour to plant opening or exit, including investments held through Luxembourg, Singapore or Hong Kong. Each project is backed by the original articles.</p>
     <div class="authors">
       <span class="chip-person"><i>OD</i>Osman Demirbağ</span>
       <span class="chip-person"><i>BG</i>Burak Gürel</span>
@@ -265,6 +266,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
       <span class="yr"><label for="y0">From</label><select class="ctl" id="y0"></select><label for="y1">to</label><select class="ctl" id="y1"></select></span>
       <select class="ctl" id="fs" aria-label="Sector"></select>
       <select class="ctl" id="fo" aria-label="Origin"></select>
+      <select class="ctl" id="fr" aria-label="Ownership route"></select>
       <div class="chips" id="chips" role="group" aria-label="Project stage"></div>
       <button class="linkbtn" id="reset">Reset</button>
       <span class="count" id="count"></span>
@@ -363,16 +365,16 @@ const BUCKETS=[
 ];
 const bucketOf=p=>BUCKETS.find(b=>b.sg.includes(p.sg))||BUCKETS[4];
 const ORIG={'CN':'Mainland China','HK':'Hong Kong','CN-hidden':'Chinese-owned foreign brand'};
-P.forEach(p=>{p.b=bucketOf(p).id;p.y0=yr(p.fe||p.f);p.y1=Math.max(yr(p.l)||p.y0,p.y0);p.search=[p.name,p.inv,p.s,p.bs,p.prov.join(' '),p.sum,p.k].join(' ').toLocaleLowerCase('tr')});
+P.forEach(p=>{p.b=bucketOf(p).id;p.y0=yr(p.fe||p.f);p.y1=Math.max(yr(p.l)||p.y0,p.y0);p.rt=p.rt||[];p.search=[p.name,p.inv,p.s,p.bs,p.prov.join(' '),p.sum,p.k,p.rt.map(r=>'via '+r).join(' '),p.rh||''].join(' ').toLocaleLowerCase('tr')});
 const EV={};E.forEach(e=>(EV[e.p]=EV[e.p]||[]).push(e));
 const Y0=Math.min(+meta.corpus_first.slice(0,4),...P.map(p=>p.y0).filter(Boolean)), Y1=Math.max(+meta.corpus_last.slice(0,4),...P.map(p=>p.y1).filter(Boolean));
 $('#span').textContent=`${Y0}–${Y1}`;
 
 /* ---------- state ---------- */
-const st={q:'',y0:Y0,y1:Y1,sector:'',origin:'',prov:'',on:new Set(['realised','agreed','talks','failed']),sort:{k:'ne',dir:-1},limit:40};
+const st={q:'',y0:Y0,y1:Y1,sector:'',origin:'',route:'',prov:'',on:new Set(['realised','agreed','talks','failed']),sort:{k:'ne',dir:-1},limit:40};
 function filtered(ignoreProv){
   const q=st.q.toLocaleLowerCase('tr');
-  return P.filter(p=>st.on.has(p.b)&&p.y1>=st.y0&&p.y0<=st.y1&&(!st.sector||p.bs===st.sector)&&(!st.origin||p.o===st.origin)&&(ignoreProv||!st.prov||p.prov.includes(st.prov))&&(!q||p.search.includes(q)));
+  return P.filter(p=>st.on.has(p.b)&&p.y1>=st.y0&&p.y0<=st.y1&&(!st.sector||p.bs===st.sector)&&(!st.origin||p.o===st.origin)&&(!st.route||(st.route==='any'?p.rt.length>0:p.rt.includes(st.route)))&&(ignoreProv||!st.prov||p.prov.includes(st.prov))&&(!q||p.search.includes(q)));
 }
 
 /* ---------- controls ---------- */
@@ -381,6 +383,8 @@ $('#y0').value=Y0;$('#y1').value=Y1;
 const sectors=[...new Set(P.map(p=>p.bs))].sort();
 $('#fs').add(new Option('All sectors',''));sectors.forEach(s=>$('#fs').add(new Option(s,s)));
 $('#fo').add(new Option('All origins',''));Object.entries(ORIG).forEach(([k,v])=>$('#fo').add(new Option(v,k)));
+const ROUTES=['Luxembourg','Singapore','Hong Kong','Netherlands'].filter(r=>P.some(p=>p.rt.includes(r)));
+$('#fr').add(new Option('Any route',''));$('#fr').add(new Option('Via a third country','any'));ROUTES.forEach(r=>$('#fr').add(new Option('Via '+r,r)));
 $('#chips').innerHTML=BUCKETS.map(b=>`<button class="chip" data-b="${b.id}" aria-pressed="${st.on.has(b.id)}" title="${b.note||''}"><span class="dot" style="background:var(${b.col})"></span>${b.label}</button>`).join('');
 $('#chips').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;const id=c.dataset.b;st.on.has(id)?st.on.delete(id):st.on.add(id);c.setAttribute('aria-pressed',st.on.has(id));render()};
 let qt;$('#q').oninput=e=>{clearTimeout(qt);qt=setTimeout(()=>{st.q=e.target.value.trim();st.limit=40;render()},120)};
@@ -388,7 +392,8 @@ $('#y0').onchange=e=>{st.y0=+e.target.value;if(st.y0>st.y1){st.y1=st.y0;$('#y1')
 $('#y1').onchange=e=>{st.y1=+e.target.value;if(st.y1<st.y0){st.y0=st.y1;$('#y0').value=st.y0}render()};
 $('#fs').onchange=e=>{st.sector=e.target.value;render()};
 $('#fo').onchange=e=>{st.origin=e.target.value;render()};
-$('#reset').onclick=()=>{Object.assign(st,{q:'',y0:Y0,y1:Y1,sector:'',origin:'',prov:'',limit:40});st.on=new Set(['realised','agreed','talks','failed']);$('#q').value='';$('#y0').value=Y0;$('#y1').value=Y1;$('#fs').value='';$('#fo').value='';document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',st.on.has(c.dataset.b)));render()};
+$('#fr').onchange=e=>{st.route=e.target.value;render()};
+$('#reset').onclick=()=>{Object.assign(st,{q:'',y0:Y0,y1:Y1,sector:'',origin:'',route:'',prov:'',limit:40});st.on=new Set(['realised','agreed','talks','failed']);$('#q').value='';$('#y0').value=Y0;$('#y1').value=Y1;$('#fs').value='';$('#fo').value='';$('#fr').value='';document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',st.on.has(c.dataset.b)));render()};
 
 /* ---------- theme ---------- */
 const root=document.documentElement;
@@ -407,7 +412,7 @@ function kpis(list){
   const arts=new Set();list.forEach(p=>(EV[p.k]||[]).forEach(e=>{if(e.t==='Y')arts.add(e.u)}));
   const provs=new Set();list.forEach(p=>p.prov.forEach(x=>provs.add(x)));
   const firms=new Set(list.map(p=>p.inv));
-  const K=[[inv.length,'Investment projects','in current selection'],[inv.filter(p=>p.b==='realised').length,'Realised or under way','plants, stakes, offices…'],[arts.size,'Articles with evidence','quoted on each project'],[provs.size,'Provinces','with a reported site'],[firms.size,'Investors','Chinese & Hong Kong groups']];
+  const K=[[inv.length,'Investment projects','in current selection'],[inv.filter(p=>p.b==='realised').length,'Realised or under way','plants, stakes, offices…'],[arts.size,'Articles with evidence','quoted on each project'],[provs.size,'Provinces','with a reported site'],[firms.size,'Investors','Chinese & Hong Kong groups'],[inv.filter(p=>p.rt.length).length,'Held via third jurisdictions','Luxembourg, Singapore, Hong Kong…']];
   $('#kpis').innerHTML=K.map(k=>`<div class="kpi"><div class="v">${fmt(k[0])}</div><div class="l">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
 }
 
@@ -481,7 +486,7 @@ function drawTable(list){
   const tb=$('#pt tbody');
   if(!rows.length){tb.innerHTML=`<tr><td colspan="7" class="empty">No projects match these filters.</td></tr>`;$('#more').innerHTML='';return}
   tb.innerHTML=rows.slice(0,st.limit).map(p=>`<tr data-k="${esc(p.k)}" tabindex="0">
-    <td><div class="nm">${esc(p.name)}</div><div class="inv">${esc(p.inv)}${p.o!=='CN'?`<span class="tag">${p.o==='HK'?'Hong Kong':'Chinese-owned brand'}</span>`:''}</div></td>
+    <td><div class="nm">${esc(p.name)}</div><div class="inv">${esc(p.inv)}${p.o!=='CN'?`<span class="tag">${p.o==='HK'?'Hong Kong':'Chinese-owned brand'}</span>`:''}${p.rt.length?`<span class="tag via">via ${esc(p.rt.join(' & '))}</span>`:''}</div></td>
     <td class="hm">${esc(p.bs)}<div class="inv">${esc(p.s)}</div></td><td class="hm">${esc(p.prov.join(', ')||'—')}</td>
     <td>${badge(p)}</td><td class="num" data-l="First evidence">${esc((p.fe||p.f||'').slice(0,7))}</td><td class="hm num amt">${esc(p.amt||'—')}</td>
     <td class="num" data-l="Evidence articles" title="${p.ne} investment-evidence claims${p.nm+p.nc+p.nx?`, plus ${p.nm+p.nc+p.nx} mentions, company news or contractor items`:''}"><span class="evbar">${'<b></b>'.repeat(Math.min(p.ne,8))}</span>${p.ne}${p.nm+p.nc+p.nx?`<span class="inv"> +${p.nm+p.nc+p.nx}</span>`:''}${p.nw?`<span class="inv"> · web ${p.nw}</span>`:''}</td></tr>`).join('');
@@ -496,7 +501,7 @@ $('#pt tbody').onkeydown=e=>{if(e.key==='Enter'){const tr=e.target.closest('tr[d
 const TL={Y:'Investment evidence',M:'Mention in passing',C:'Company news',E:'Contractor / finance',X:'Other source'};
 function evHtml(e){
   const bits=[e.f,e.a,e.j?e.j+' jobs':'',e.c].filter(Boolean).map(esc).join(' · ');
-  if(e.t==='X')return `<div class="ev t-X"><div class="when">${esc(e.d)}</div><div class="what">${esc(cap(e.e))}<span class="tag">Other news source</span></div>${bits?`<div class="src">${bits}</div>`:''}<div class="sumx">${esc(e.q)}</div><div class="src">${esc(e.h)} · <a href="${esc(e.u)}" target="_blank" rel="noopener">Article ↗</a></div>${e.n?`<div class="note">${esc(e.n)}</div>`:''}</div>`;
+  if(e.t==='X')return `<div class="ev t-X"><div class="when">${esc(e.d)}</div><div class="what">${esc(cap(e.e))}<span class="tag">Other news source</span></div>${bits?`<div class="src">${bits}</div>`:''}<div class="sumx">${esc(e.q)}</div><div class="src">${esc(e.h)} · <a href="${esc(e.u)}" target="_blank" rel="noopener">${esc(e.pub||'Article')} ↗</a></div>${e.n?`<div class="note">${esc(e.n)}</div>`:''}</div>`;
   return `<div class="ev t-${e.t}"><div class="when">${esc(e.d)}</div><div class="what">${esc(cap(e.e))}${e.t!=='Y'?`<span class="tag">${TL[e.t]}</span>`:''}</div>${bits?`<div class="src">${bits}</div>`:''}
   <blockquote lang="tr">${esc(e.q)}</blockquote><div class="src">${esc(e.h)} · <a href="${esc(e.u)}" target="_blank" rel="noopener">${srcName(e.u)} article ↗</a></div>${e.n?`<div class="note">${esc(e.n)}</div>`:''}</div>`}
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):'';
@@ -508,6 +513,7 @@ function openP(k){
   const groups=[['Y','Investment steps'],['M','Mentions'],['CE','Company news & contractor'],['X','Other news sources']].map(([t,l])=>({t,l,items:ev.filter(e=>t.includes(e.t))})).filter(g=>g.items.length);
   $('#dh').innerHTML=`<button class="iconbtn x" id="close" aria-label="Close">✕ Close</button>${badge(p)}<h3>${esc(p.name)}</h3><div class="inv">${esc(p.inv)} · ${esc(ORIG[p.o]||p.o)}</div>`;
   const F=[['Sector',p.bs+' · '+p.s],['Province',p.prov.join(', ')||'—'],['Reported amount',p.amt||'—'],['Jobs reported',p.jobs||'—'],['First evidence',p.fe||'—'],['Last report',p.l||'—'],['Type',p.it||'—'],['Status',p.st||'—']];
+  if(p.rt.length)F.push(['Held via',p.rt.join(', ')+(p.rh?' — '+p.rh:'')]);
   $('#db').innerHTML=`<p class="summary">${esc(p.sum)}</p><div class="facts">${F.map(f=>`<div class="fact"><div class="k">${f[0]}</div><div class="v">${esc(f[1])}</div></div>`).join('')}</div>
 
    <div class="tabs" role="tablist">${groups.map((g,i)=>`<button role="tab" aria-selected="${i===0}" data-i="${i}">${g.l} (${g.items.length})</button>`).join('')}</div>
@@ -527,7 +533,7 @@ $('#siglist').innerHTML=D.general.map(g=>`<div class="sigitem"><div class="when"
 /* ---------- downloads ---------- */
 const kb=b=>b>1e6?(b/1e6).toFixed(1)+' MB':Math.round(b/1e3)+' KB';
 const DS=[
-  ['projects','Projects','One row per project: investor, origin, sector, provinces, stage, reported amount and jobs, dates and evidence counts.'],
+  ['projects','Projects','One row per project: investor, origin, ownership route, sector, provinces, stage, reported amount and jobs, dates and evidence counts.'],
   ['events','Evidence','One row per claim with the quote from the article, event type, firm, amount, date and article link.']
 ];
 const xl=FILES.xlsx?kb(FILES.xlsx.bytes):'';
@@ -537,8 +543,9 @@ $('#cb tbody').innerHTML=CB.map(r=>`<tr><td>${esc(r[0])}</td><td><code>${esc(r[1
 
 /* ---------- method ---------- */
 $('#methodbody').innerHTML=`
-<p><b>Sources.</b> The business dailies Dünya (2008–2022) and Aydınlık (2011–2023), complemented by other news reports for projects these papers do not cover. Every claim links to the article it comes from.</p>
+<p><b>Sources.</b> The dailies Dünya (2008–2022) and Aydınlık (2011–2023), complemented by other newspapers, trade press and company announcements for projects these papers do not cover. Every claim links to the article it comes from.</p>
 <p><b>Scope.</b> Investment in Turkey by mainland Chinese firms, Hong Kong firms and foreign brands owned by Chinese groups (for example Pirelli under ChemChina, Riot Games under Tencent, Salcomp under Luxshare). Taiwanese investors are excluded. Construction contracts and Chinese loans are shown separately and not counted as investment.</p>
+<p><b>Ownership routes.</b> Some investors hold their Turkish company through a holding in Luxembourg, Singapore, Hong Kong or the Netherlands, so official statistics record the investment under that country. Where trade-registry records show such a route, the project carries a “via” tag and can be filtered by route.</p>
 <h3>Reading the data</h3>
 <ul><li>Stages reflect the latest reports available. Announced projects that later vanish from the news are shown as announced, not failed.</li>
 <li>Amounts and jobs are as stated in the reports, often targets, and are not converted or deflated.</li>

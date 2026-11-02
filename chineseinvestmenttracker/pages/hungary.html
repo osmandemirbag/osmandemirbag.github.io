@@ -9,7 +9,7 @@
   try { var h = P.__titrHash || ''; if (h) history.replaceState(null, '', '#' + h); } catch (e) { /* state starts at the defaults */ }
   document.addEventListener('click', function (e) {
     var a = e.target && e.target.closest ? e.target.closest('a[href]') : null; if (!a) return;
-    var href = a.getAttribute('href') || '', m = href.match(/^(index|comparison|turkey|hungary|kazakhstan)\.html(?:#(.*))?$/);
+    var href = a.getAttribute('href') || '', m = href.match(/^(index|comparison|turkey|hungary|kazakhstan|azerbaijan|georgia)\.html(?:#(.*))?$/);
     if (m) {
       e.preventDefault(); e.stopPropagation();
       try { P.__titrGo(m[1], m[2] || ''); } catch (err) { P.postMessage({ titr: 'go', page: m[1], hash: m[2] || '' }, '*'); }
